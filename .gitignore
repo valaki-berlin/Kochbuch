@@ -1,3 +1,13 @@
+# SQLite Datenbanken (Wichtig!)
+# Wir ignorieren die .db Dateien, damit deine lokalen Testdaten 
+# nicht auf GitHub landen.
+*.db
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal:wq
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

@@ -1,0 +1,16 @@
+# /etc/systemd/system/kochbuch.service
+
+[Unit]
+Description=Gunicorn instance to serve the Kochbuch App
+After=network.target
+
+[Service]
+User=moebius
+Group=www-data
+WorkingDirectory=/home/moebius/Geheimlabor/kochbuch
+# Wir lassen Gunicorn auf Port 8000 laufen
+ExecStart=/usr/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 main:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

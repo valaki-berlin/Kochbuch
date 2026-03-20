@@ -1,0 +1,15 @@
+# /etc/systemd/system/dashboard.service
+[Unit]
+Description=Gunicorn instance for Dashboard
+After=network.target
+
+[Service]
+User=moebius
+Group=www-data
+WorkingDirectory=/home/moebius/Geheimlabor/dashboard
+# Beachte den Port 8080 hier!
+ExecStart=/usr/bin/gunicorn --workers 2 --bind 0.0.0.0:8080 main:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
