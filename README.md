@@ -1,6 +1,6 @@
-./dashboard 
-  web server landing page
-./kochbuch
-  pyhton webserver and DB interface
-./kochbuch/db
-  SQLlite database holding all the stuff
+./dashboard <br>
+  web server landing page<br>
+./kochbuch<br>
+  pyhton webserver and DB interface<br>
+./kochbuch/db<br>
+  SQLlite database holding all the stuff<br>
