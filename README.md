@@ -25,4 +25,4 @@ Contains configuration files for system integration.
 
 1. **Clone the Repository:**
    ```bash
-   git clone [https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git](https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git) ~/spieltisch_repo
+   git clone [https://github.com/valaki-berlin/Kochbuch.git](https://github.com/valaki-berlin/Kochbuch.git) ~/new_repo
