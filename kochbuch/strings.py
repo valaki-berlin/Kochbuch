@@ -3,17 +3,23 @@
 
 TRANSLATIONS = {
     'de': {
-        'title': 'Mein Kochbuch',
-        'no_recipes': 'Noch keine Rezepte da. Füge bald welche hinzu!',
-        'welcome': 'Willkommen am Spieltisch',
+        'title': 'Rezepte',
+        'welcome': 'Willkommen in der Hexenküche',
+        'search_placeholder': 'Suche nach Rezepten...',
+        'btn_new': '[ NEUES REZEPT ERSTELLEN ]',
         'btn_kochbuch': '[ KOCHBUCH ]',
-        'btn_inventar': '[ INVENTAR ]'
+        'no_recipes': 'Keine Rezepte gefunden.',
+        'save': 'Speichern',
+	'search':'Suchen...'
     },
     'en': {
-        'title': 'My Cookbook',
-        'no_recipes': 'No recipes yet. Add some soon!',
-        'welcome': 'Welcome to the Spieltisch',
+        'title': 'Recipes Database',
+        'welcome': 'Welcome to the Secret Lab',
+        'search_placeholder': 'Search for recipes...',
+        'btn_new': '[ CREATE NEW RECIPE ]',
         'btn_kochbuch': '[ COOKBOOK ]',
-        'btn_inventar': '[ INVENTORY ]'
+        'no_recipes': 'No recipes found.',
+        'save': 'Save',
+	'search':'Search...'
     }
 }

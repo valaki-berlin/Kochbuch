@@ -1,0 +1,31 @@
+# /etc/nginx/sites-available/default
+server {
+    listen 80;
+    server_name spieltisch.local;
+
+    # Die Schaltzentrale (Landing Page)
+    location / {
+	proxy_pass http://127.0.0.1:8080/; 
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # Weiterleitung zum Gunicorn-Dienst (Port 8000)
+    location /kochbuch/ {
+	proxy_pass http://127.0.0.1:8000;  # <--- Hier KEIN / am Ende
+    	proxy_set_header Host $host;
+    	proxy_set_header X-Real-IP $remote_addr;
+    	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    	proxy_set_header X-Forwarded-Proto $scheme;
+	# Diese Zeile ist wichtig, damit ProxyFix weiß, wo wir sind:
+    	# proxy_set_header X-Forwarded-Prefix /kochbuch;
+    	# Wichtig für Redirects:
+    	proxy_redirect off;
+    }
+
+    # Platzhalter für zukünftige Dienste
+#    location /inventar/ {
+#        return 200 '<h1>Inventar</h1><p>Noch in Arbeit...</p><a href="/">Zurück</a>';
+#        add_header Content-Type text/html;
+#    }
+}

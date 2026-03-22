@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ t('title') }}{% endblock %}</title>
+    <style>
+        :root {
+	/* Retro Terminal Palette: Amber on Black */
+	--bg-color: #1c1f22;          /* Soft Charcoal */
+        --panel-color: #2d3135;       /* Lighter Grey for cards */
+        --text-color: #e6e6e6;        /* Off-white for readability */
+        --accent-color: #ffb000;      /* Amber for primary actions */
+        --secondary-amber: #cc8e00;   /* Muted Amber */
+        --border-color: #3e444a;      /* Subtle borders */
+        --input-bg: #0d1117;          /* Dark contrast for inputs */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        h1 { color: var(--accent-color); margin-top: 0; }
+
+        input[type="search"], input[type="text"], textarea {
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        button, .btn {
+            background-color: var(--button-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--border-color);
+            border-color: #8b949e;
+        }
+
+        .recipe-card {
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        a { color: var(--accent-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        hr { border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+		<li><a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('btn_kochbuch') }}</a></li>
+        	<li><a href="#" class="btn">{{ t('btn_inventar') }}</a></li>
+            </ul>
+        </nav>
+        <h1>{% block header_title %}{{ t('title') }}{% endblock %}</h1>
+        <p><i>{{ t('welcome') }}</i></p>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <hr>
+        <p><small>Terminal access: Raspberry Pi 2 | SQLite 3 | Lab Status: Online</small></p>
+    </footer>
+</body>
+</html>

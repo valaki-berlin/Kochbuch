@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="recipe-card">
+        <form action="{{ url_for('kochbuch.index') }}" method="get">
+            <input type="search" name="search" 
+                   placeholder="{{ t('search_placeholder') }}" 
+                   value="{{ search_query or '' }}">
+            <button type="submit">Execute Search</button>
+        </form>
+    </div>
+
+    <div style="margin: 2rem 0;">
+        <a href="{{ url_for('kochbuch.show_form') }}" class="btn"><b>{{ t('btn_new') }}</b></a>
+    </div>
+
+    <hr>
+
+    <section>
+        {% if recipes %}
+            {% for recipe in recipes %}
+                <div class="recipe-card">
+                    <a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}">
+                        <h3>{{ recipe.title }}</h3>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>{{ t('no_recipes') }}</p>
+        {% endif %}
+    </section>
+{% endblock %}

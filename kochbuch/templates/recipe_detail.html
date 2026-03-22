@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recipe-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <h1>{{ recipe.title }}</h1>
+        <a href="{{ url_for('kochbuch.show_edit_form', id=recipe.recipe_id) }}" class="btn">Edit Recipe</a>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{{ url_for('kochbuch.index') }}" class="btn">Back to Database</a>
+    </div>
+</div>
+{% endblock %}

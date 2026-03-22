@@ -1,34 +1,72 @@
-# coding: utf-8
+# main.py - Core Flask Server
+import os
 import sqlite3
-from flask import Flask, render_template
+from flask import Flask, Blueprint, render_template, request, g
+from werkzeug.middleware.proxy_fix import ProxyFix
+from strings import TRANSLATIONS
+
+from database import get_db
+
+# Modular imports
+import create_recipe
+import view_recipe
+import edit_recipe
+
+DATABASE = 'rezepte/RezeptDB.db'
 
 app = Flask(__name__)
+@app.context_processor
+def inject_globals():
+    return dict(t=get_string)
 
-def get_db_connection():
-    # Connect to the local SQLite file
-    conn = sqlite3.connect('Rezepte.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# Middleware für Proxy-Support (Nginx)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
-@app.route('/')
+# Blueprint für den Unterpfad /kochbuch
+# kb = Blueprint('kochbuch', __name__, url_prefix='/kochbuch')
+# kb = Blueprint('kochbuch', __name__, url_prefix='/kochbuch')
+
+# Zu dem hier (Präfix entfernen):
+kb = Blueprint('kochbuch', __name__)
+
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+def get_string(key):
+    lang = request.accept_languages.best_match(TRANSLATIONS.keys()) or 'en'
+    return TRANSLATIONS.get(lang, TRANSLATIONS['en']).get(key, key)
+
+# --- Routen innerhalb des Blueprints ---
+
+@kb.route('/')
 def index():
-    conn = get_db_connection()
-    # Create table if it doesn't exist yet
-    conn.execute('''CREATE TABLE IF NOT EXISTS rezepte 
-                    (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                     titel TEXT NOT NULL, 
-                     zutaten TEXT)''')
+    query = request.args.get('search', '')
+    db = get_db()
     
-    # Get all recipes (currently empty)
-    rezepte = conn.execute('SELECT * FROM rezepte').fetchall()
-    conn.close()
-    
-    # Return a simple list for now
-    html = "<h1>Mein Kochbuch</h1>"
-    if not rezepte:
-        html += "<p>Noch keine Rezepte da. Füge bald welche hinzu!</p>"
-    return html
+    if query:
+        sql = "SELECT recipe_id, title FROM recipe WHERE title_normalized LIKE ? AND is_published = 1"
+        recipes = db.execute(sql, ('%' + query.lower() + '%',)).fetchall()
+    else:
+        recipes = db.execute("SELECT recipe_id, title FROM recipe WHERE is_published = 1").fetchall()
+
+    return render_template('index.html', 
+                           recipes=recipes, 
+                           t=get_string, 
+                           search_query=query)
+
+# Register routes from other modules TO THE BLUEPRINT
+kb.add_url_rule('/recipe/new', view_func=create_recipe.show_form, methods=['GET', 'POST'], endpoint='show_form')
+kb.add_url_rule('/recipe/<int:id>', view_func=view_recipe.show_details, endpoint='show_details')
+kb.add_url_rule('/recipe/<int:id>/edit', view_func=edit_recipe.show_edit_form, methods=['GET', 'POST'], endpoint='show_edit_form')
+
+# --- App Konfiguration ---
+
+app.register_blueprint(kb)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
-
+    # Lokal zum Testen auf Port 5000, Gunicorn nutzt später Port 8000
+    app.run(host='0.0.0.0', port=5000, debug=True)

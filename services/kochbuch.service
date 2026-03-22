@@ -8,6 +8,7 @@ After=network.target
 User=moebius
 Group=www-data
 WorkingDirectory=/home/moebius/Geheimlabor/kochbuch
+Environment=SCRIPT_NAME=/kochbuch
 # Wir lassen Gunicorn auf Port 8000 laufen
 ExecStart=/usr/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 main:app
 Restart=always

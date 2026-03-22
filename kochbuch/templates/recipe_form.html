@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recipe-card">
+    <h2>{{ t('btn_new') if not is_edit else 'Edit Recipe' }}</h2>
+    
+    <form method="post">
+        <label for="title">Recipe Title:</label><br>
+        <input type="text" id="title" name="title" required 
+               value="{{ recipe.title if recipe else '' }}">
+        
+        <hr>
+        <button type="submit" class="btn" style="background-color: #ffb000; color: #000;">
+            {{ t('save') }}
+        </button>
+        <a href="{{ url_for('kochbuch.index') }}" class="btn" style="background: none; border: 1px solid var(--border-color);">Cancel</a>
+    </form>
+</div>
+{% endblock %}
