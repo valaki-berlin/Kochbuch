@@ -4,11 +4,25 @@
 <div class="recipe-card">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <h1>{{ recipe.title }}</h1>
-        <a href="{{ url_for('kochbuch.show_edit_form', id=recipe.recipe_id) }}" class="btn">Edit Recipe</a>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+            
+            <a href="{{ url_for('kochbuch.show_edit_form', id=recipe.recipe_id) }}" class="btn">
+                {{ t('edit_button_text') }}
+            </a>
+
+            <form action="{{ url_for('kochbuch.delete_recipe', id=recipe.recipe_id) }}" method="POST" 
+                  onsubmit="return confirm('{{ t('delete_confirm') }}');">
+                <button type="submit" class="btn-delete">
+                    {{ t('delete_button') }}
+                </button>
+            </form>
+            
+        </div>
     </div>
     
     <div style="margin-top: 2rem;">
-        <a href="{{ url_for('kochbuch.index') }}" class="btn">Back to Database</a>
+        <a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('back_to_db') }}</a>
     </div>
 </div>
 {% endblock %}

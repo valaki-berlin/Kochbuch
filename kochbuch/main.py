@@ -18,6 +18,9 @@ app = Flask(__name__)
 @app.context_processor
 def inject_globals():
     return dict(t=get_string)
+def inject_translations():
+    # Alles in diesem Dict ist automatisch in allen HTML-Dateien verfügbar
+    return dict(t=get_string)
 
 # Middleware für Proxy-Support (Nginx)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
@@ -62,6 +65,7 @@ def index():
 kb.add_url_rule('/recipe/new', view_func=create_recipe.show_form, methods=['GET', 'POST'], endpoint='show_form')
 kb.add_url_rule('/recipe/<int:id>', view_func=view_recipe.show_details, endpoint='show_details')
 kb.add_url_rule('/recipe/<int:id>/edit', view_func=edit_recipe.show_edit_form, methods=['GET', 'POST'], endpoint='show_edit_form')
+kb.add_url_rule('/recipe/<int:id>/delete', view_func=view_recipe.delete_recipe, methods=['POST'], endpoint='delete_recipe')
 
 # --- App Konfiguration ---
 

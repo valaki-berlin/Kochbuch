@@ -67,13 +67,55 @@
             border-color: #8b949e;
         }
 
+	.btn-delete {
+	    display: inline-block;
+	    padding: 8px 16px;
+	    border-radius: 4px;
+	    border: 1px solid var(--accent-color);
+	    font-size: 14px;
+	    font-weight: bold;
+	    cursor: pointer;
+	    transition: all 0.2s ease;
+
+	    background-color: var(--accent-color);
+	    color: var(--bg-color); 
+	}
+
+	.btn-delete:hover {
+	    background-color: var(--secondary-amber);
+	    border-color: var(--secondary-amber);
+	}
+
         .recipe-card {
             background-color: var(--panel-color);
             border: 1px solid var(--border-color);
             padding: 1rem;
             margin-bottom: 1rem;
             border-radius: 8px;
+	    transition: all 0.3s ease; /* Weicher Übergang */
+	   xposition: relative;
+  	    overflow: hidden;
         }
+
+	.recipe-card:hover {
+	    border-color: var(--accent-color); /* Rahmen leuchtet auf */
+	    box-shadow: 0 0 15px rgba(255, 176, 0, 0.15); /* Subtiles Amber-Glühen */
+	    transform: translateY(-2px); /* Karte hebt sich leicht an */
+	}
+
+	.recipe-card::after {
+	    content: "";
+	    position: absolute;
+	    top: 0; left: 0; right: 0; bottom: 0;
+	    background: linear-gradient(
+	        rgba(18, 16, 16, 0) 50%, 
+	        rgba(0, 0, 0, 0.05) 50%
+	    );
+	    background-size: 100% 4px;
+	    z-index: 1;
+	    pointer-events: none; /* Klicks gehen durch den Effekt durch */
+	}
+
 
         a { color: var(--accent-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
@@ -86,7 +128,6 @@
         <nav>
             <ul>
 		<li><a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('btn_kochbuch') }}</a></li>
-        	<li><a href="#" class="btn">{{ t('btn_inventar') }}</a></li>
             </ul>
         </nav>
         <h1>{% block header_title %}{{ t('title') }}{% endblock %}</h1>

@@ -1,12 +1,18 @@
 # coding: utf-8
 # view_recipe.py - Displays full recipe details
-from flask import render_template, g, abort
+from flask import render_template, g, abort, request, redirect, url_for
 from database import get_db  # <--- Hier importieren!
+
+def delete_recipe(id):
+    if request.method == 'POST':
+        db = get_db()
+        db.execute("DELETE FROM recipe WHERE recipe_id = ?", (id,))
+        db.commit()
+    return redirect(url_for('kochbuch.index'))
 
 def show_details(id):
 	# from main import get_db  # Lokaler Import um Circular Imports zu vermeiden
     db = get_db()
-    #db = g._database
     
     # 1. Fetch core recipe data
     recipe = db.execute("SELECT * FROM recipe WHERE recipe_id = ?", (id,)).fetchone()
