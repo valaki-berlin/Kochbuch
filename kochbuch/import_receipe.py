@@ -118,4 +118,4 @@ if __name__ == "__main__":
         print("Usage: python import_recipe.py <recipe.xml>")
     else:
         target_xml = sys.argv[1]
-        import_xml_to_db(target_xml, '../rezepte/RezeptDB.db')
+        import_xml_to_db(target_xml, 'rezepte/RezeptDB.db')

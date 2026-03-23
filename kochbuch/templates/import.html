@@ -3,18 +3,23 @@
 {% block content %}
 <div class="recipe-card">
     <h1>{{ t('import_recipe') }}</h1>
-    
-    <form action="{{ url_for('kochbuch.do_import') }}" method="POST" enctype="multipart/form-data">
-        <div style="margin: 2rem 0;">
-            <label class="btn" style="cursor: pointer; display: inline-block;">
-                {{ t('choose_file') or 'Datei auswählen' }}
-                <input type="file" name="xml_file" accept=".xml" style="display: none;">
-            </label>
+    <p style="color: var(--secondary-amber); margin-bottom: 2rem;">
+		{{ t('upload_text') }}
+    </p>
+
+    <form action="{{ url_for('kochbuch.do_import') }}" method="POST" enctype="multipart/form-data" class="search-grid" style="display: block;">
+        <div style="margin-bottom: 2rem;">
+            <input type="file" name="xml_file" id="xml_file" accept=".xml" required
+                   style="color: var(--text-color); background: var(--input-bg); padding: 10px; border: 1px dashed var(--border-color); width: 100%;">
         </div>
-        
+
         <div style="display: flex; gap: 15px;">
-            <button type="submit" class="btn-delete">{{ t('import_button') }}</button>
-            <a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('back_to_db') }}</a>
+            <button type="submit" class="btn-delete">
+                {{ t('import_button') }}
+            </button>
+            <a href="{{ url_for('kochbuch.index') }}" class="btn">
+                {{ t('back_to_db') }}
+            </a>
         </div>
     </form>
 </div>

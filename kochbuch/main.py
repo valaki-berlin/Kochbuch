@@ -1,8 +1,9 @@
 # main.py - Core Flask Server
 import os
 import sqlite3
-from flask import Flask, Blueprint, render_template, request, g
-from werkzeug.middleware.proxy_fix import ProxyFix
+from flask import Flask, Blueprint, render_template, request, g, flash, redirect, url_for
+from werkzeug.middleware.proxy_fix import ProxyFix 
+from werkzeug.utils import secure_filename
 from strings import TRANSLATIONS
 
 from database import get_db
@@ -11,10 +12,19 @@ from database import get_db
 import create_recipe
 import view_recipe
 import edit_recipe
+import import_recipe
 
 DATABASE = 'rezepte/RezeptDB.db'
 
+# Temporary directory for uploaded XML files
+UPLOAD_FOLDER = 'temp_uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 app = Flask(__name__)
+
+app.secret_key = 'super-secret-terminal-key-123'
+
 @app.context_processor
 def inject_globals():
     return dict(t=get_string)
@@ -61,12 +71,56 @@ def index():
                            t=get_string, 
                            search_query=query)
 
+def import_page():
+    """Renders the upload form for XML import."""
+    return render_template('import.html')
+
+def do_import():
+#    """Handles the XML file upload and calls the import logic."""
+    if 'xml_file' not in request.files:
+        flash('No file part', 'danger')
+        return redirect(url_for('kochbuch.import_page'))
+    
+    file = request.files['xml_file']
+    if file.filename == '':
+        flash('No selected file', 'danger')
+        return redirect(url_for('kochbuch.import_page'))
+
+    if file and file.filename.endswith('.xml'):
+        # Save file to a secure temporary path
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(filepath)
+
+        try:
+            # Execute your existing import function
+            # Ensure DATABASE variable contains the correct path to your SQLite file
+            print("call import_recipe.import_xml_to_db", flush=True)
+            import_recipe.import_xml_to_db(filepath, DATABASE)
+            flash('Import successful!', 'success')
+        except Exception as e:
+            print(f"Critical Error: {str(e)}", flush=True) # write to logfile      
+            flash(f'Error during import: {str(e)}', 'danger')
+        finally:
+            # Clean up: remove the temporary file after processing
+            print("after check fn!!!", flush=True)
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                
+        return redirect(url_for('kochbuch.index'))
+    
+    flash('Invalid file format. Please upload an XML file.', 'danger')
+    return redirect(url_for('kochbuch.import_page'))
+
 # Register routes from other modules TO THE BLUEPRINT
 kb.add_url_rule('/recipe/new', view_func=create_recipe.show_form, methods=['GET', 'POST'], endpoint='show_form')
 kb.add_url_rule('/recipe/<int:id>', view_func=view_recipe.show_details, endpoint='show_details')
 kb.add_url_rule('/recipe/<int:id>/edit', view_func=edit_recipe.show_edit_form, methods=['GET', 'POST'], endpoint='show_edit_form')
 kb.add_url_rule('/recipe/<int:id>/delete', view_func=view_recipe.delete_recipe, methods=['POST'], endpoint='delete_recipe')
-kb.add_url_rule('/import', view_func=lambda: "Import-Seite kommt bald!", endpoint='import_page')
+kb.add_url_rule('/import', view_func=import_page, methods=['GET'], endpoint='import_page')
+kb.add_url_rule('/do_import', view_func=do_import, methods=['POST'], endpoint='do_import')
+
+
 # --- App Konfiguration ---
 
 app.register_blueprint(kb)

@@ -13,7 +13,7 @@ def delete_recipe(id):
     return redirect(url_for('kochbuch.index'))
 
 def show_details(id):
-	# from main import get_db  # Lokaler Import um Circular Imports zu vermeiden
+    # from main import get_db  # Lokaler Import um Circular Imports zu vermeiden
     db = get_db()
     
     # 1. Fetch core recipe data
