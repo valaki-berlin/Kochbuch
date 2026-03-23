@@ -1,32 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="recipe-card">
-        <form action="{{ url_for('kochbuch.index') }}" method="get">
-            <input type="search" name="search" 
-                   placeholder="{{ t('search_placeholder') }}" 
-                   value="{{ search_query or '' }}">
-            <button type="submit">{{ t('search') }}</button>
+    <div class="search-section">
+        <form action="{{ url_for('kochbuch.index') }}" method="get" class="search-grid">
+            
+            <label for="search_title">{{ t('search_title') }}</label>
+            <input type="text" name="title" id="search_title" value="{{ request.args.get('title', '') }}">
+
+            <label for="search_category">{{ t('search_category') }}</label>
+            <input type="text" name="category" id="search_category" value="{{ request.args.get('category', '') }}">
+
+            <label for="search_ingredients">{{ t('search_ingredients') }}</label>
+            <div class="search-row-last">
+                <input type="text" name="ingredients" id="search_ingredients" value="{{ request.args.get('ingredients', '') }}">
+                <button type="submit" class="btn-delete">{{ t('search_button') }}</button>
+            </div>
+            
         </form>
     </div>
 
-    <div style="margin: 2rem 0;">
-        <a href="{{ url_for('kochbuch.show_form') }}" class="btn"><b>{{ t('btn_new') }}</b></a>
+    <div style="margin: 2rem 0; display: flex; gap: 15px;">
+        <a href="{{ url_for('kochbuch.show_form') }}" class="btn">
+            <b>{{ t('create_recipe') }}</b>
+        </a>
+        <a href="{{ url_for('kochbuch.import_page') }}" class="btn">
+            <b>{{ t('import_recipe') }}</b>
+        </a>
     </div>
 
-    <hr>
+    <hr style="border-color: var(--border-color); margin-bottom: 2rem;">
 
     <section>
         {% if recipes %}
-            {% for recipe in recipes %}
-                <div class="recipe-card">
-                    <a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}">
-                        <h3>{{ recipe.title }}</h3>
-                    </a>
-                </div>
-            {% endfor %}
+            <div style="display: grid; gap: 1rem;">
+                {% for recipe in recipes %}
+			<a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}" class="recipe-card-link">
+                        <div class="recipe-card-index">
+                            
+                            <div class="recipe-text">
+                                <h3 style="margin: 0 0 0.5rem 0; color: var(--accent-color);">{{ recipe.title }}</h3>
+                                {% if recipe.category %}
+                                    <small style="color: var(--secondary-amber);">{{ recipe.category }}</small>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="recipe-image-container">
+                                {% if recipe.image_url %}
+                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="recipe-thumbnail">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Image" class="recipe-thumbnail">
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+
+                {% endfor %}
+            </div>
         {% else %}
-            <p>{{ t('no_recipes') }}</p>
+            <div class="recipe-card">
+                <p style="margin: 0; text-align: center;">{{ t('no_recipes') }}</p>
+            </div>
         {% endif %}
     </section>
+
 {% endblock %}

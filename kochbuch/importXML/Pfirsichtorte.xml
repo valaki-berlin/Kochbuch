@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cookbook>
+    <recipe id="2">
+        <title>Sekt-Joghurt-Torte mit Pfirsich</title>
+        <description>Erfrischende Torte mit Sekt-Joghurt-Creme, Pfirsichen und einer Schokoverzierung.</description>
+        <ingredients>
+            <ingredient amount="2" unit="Stück">Eier (Gr. M)</ingredient>
+            <ingredient amount="1" unit="Prise">Salz</ingredient>
+            <ingredient amount="50" unit="g">Zucker (für den Boden)</ingredient>
+            <ingredient amount="1" unit="Päckchen">Vanillin-Zucker</ingredient>
+            <ingredient amount="75" unit="g">Mehl</ingredient>
+            <ingredient amount="25" unit="g">Speisestärke</ingredient>
+            <ingredient amount="1" unit="gestrichener TL">Backpulver</ingredient>
+            
+            <ingredient amount="12" unit="Blatt">weiße Gelatine</ingredient>
+            <ingredient amount="1" unit="Dose (850 ml)">Pfirsiche</ingredient>
+            <ingredient amount="1" unit="Dose (425 ml)">Pfirsiche</ingredient>
+            <ingredient amount="375" unit="g">Vollmilch-Joghurt</ingredient>
+            <ingredient amount="125" unit="g">Zucker (für die Creme)</ingredient>
+            <ingredient amount="1" unit="EL">Zucker (für den Guss)</ingredient>
+            <ingredient amount="200" unit="ml">Sekt</ingredient>
+            <ingredient amount="750" unit="g">Schlagsahne</ingredient>
+            <ingredient amount="1" unit="Päckchen">klarer Tortenguss</ingredient>
+            <ingredient amount="30" unit="g">Mandelblättchen (3 gehäufte EL)</ingredient>
+            <ingredient amount="50" unit="g">Zartbitter-Kuvertüre</ingredient>
+        </ingredients>
+        
+        <instructions>
+            <step order="1">Springform (26 cm Ø) mit Backpapier auslegen. Eier trennen. Eiweiß, 2 EL kaltes Wasser und Salz steif schlagen, dabei 50g Zucker und Vanillin-Zucker einrieseln lassen. Eigelb einzeln unterrühren. Mehl, Stärke und Backpulver daraufsieben und unterheben. Bei 200°C (Umluft: 175°C) ca. 15 Min. backen. Auskühlen lassen.</step>
+            <step order="2">10 und 2 Blatt Gelatine getrennt kalt einweichen. Pfirsiche abtropfen, Saft auffangen. 3 große Pfirsichhälften pürieren. 2 Blatt Gelatine ausdrücken, bei schwacher Hitze auflösen. 2 EL Pfirsichpüree einrühren, dann unter das übrige Püree rühren (nicht kalt stellen!).</step>
+            <step order="3">Joghurt, 100-125g Zucker und Sekt verrühren. 10 Blatt Gelatine auflösen, 2 EL Joghurtcreme einrühren, dann unter die übrige Creme rühren. Kalt stellen, bis sie zu gelieren beginnt. 500g Sahne steif schlagen. Püree als „Schlieren“ unter die Creme ziehen. Tortenring um den Boden schließen, Creme daraufstreichen und über Nacht kalt stellen.</step>
+            <step order="4">Pfirsiche auf die Creme legen. Gusspulver, 1 EL Zucker und 1/4 l Pfirsichsaft aufkochen. Auf den Pfirsichen verteilen und ca. 1 Stunde kalt stellen.</step>
+            <step order="5">Mandeln rösten. 250g Sahne steif schlagen. Kuvertüre schmelzen, in einen Spritzbeutel füllen. Torte mit Sahne, Kuvertüre und Mandeln verzieren.</step>
+        </instructions>
+        
+        <notes>
+            Zubereitungszeit ca. 1,5 Std. Backzeit ca. 15 Min. Auskühl-/Kühlzeit ca. 15 Std.
+            Pro Stück ca. 430 kcal; 7g E, 24g F, 40g KH.
+        </notes>
+    </recipe>
+</cookbook>

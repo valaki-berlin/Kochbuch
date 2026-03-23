@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS recipe (
     title_normalized   TEXT NOT NULL COLLATE NOCASE,
     description   TEXT,
     annotations   TEXT,
-    servings      REAL NOT NULL CHECK (servings > 0),
+    servings      INTEGER CHECK (servings > 0),
     prep_minutes  INTEGER CHECK (prep_minutes >= 0),
     cook_minutes  INTEGER CHECK (cook_minutes >= 0),
-    is_tested     INTEGER NOT NULL DEFAULT 1 CHECK (is_published IN (0,1)),
+    is_tested     INTEGER NOT NULL DEFAULT 1 CHECK (is_tested IN (0,1)),
     created_at         TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
 );

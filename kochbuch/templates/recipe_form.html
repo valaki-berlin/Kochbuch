@@ -13,7 +13,7 @@
         <button type="submit" class="btn" style="background-color: #ffb000; color: #000;">
             {{ t('save') }}
         </button>
-        <a href="{{ url_for('kochbuch.index') }}" class="btn" style="background: none; border: 1px solid var(--border-color);">Cancel</a>
+        <a href="{{ url_for('kochbuch.index') }}" class="btn" style="background: none; border: 1px solid var(--border-color);">{{ t('cancel') }}</a>
     </form>
 </div>
 {% endblock %}

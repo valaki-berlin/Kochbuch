@@ -48,6 +48,49 @@
             width: 100%;
             max-width: 400px;
         }
+.search-section {
+    background-color: var(--panel-color);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr; /* Festgelegte Breite für Labels */
+    gap: 15px;
+    align-items: center;
+}
+
+.search-grid label {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.search-grid input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.search-row-last {
+    display: flex;
+    gap: 15px;
+}
+
+.search-row-last input {
+    flex-grow: 1; /* Input nimmt den restlichen Platz ein */
+}
+
+/* Der Suchbutton (wir nutzen den btn-delete Style für Vollfarbe) */
+.search-row-last button {
+    white-space: nowrap;
+    min-width: 100px;
+}
 
         button, .btn {
             background-color: var(--button-bg);
@@ -116,6 +159,68 @@
 	    pointer-events: none; /* Klicks gehen durch den Effekt durch */
 	}
 
+
+        .recipe-card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .recipe-card-index {
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: flex; /* Flexbox für Nebeneinander */
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Der Hover-Effekt (falls noch nicht global definiert) */
+        .recipe-card-index:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 176, 0, 0.15);
+        }
+
+        .recipe-text {
+            flex-grow: 1; /* Text nimmt den restlichen Platz ein */
+        }
+
+        .recipe-image-container {
+            width: 100px; /* Feste Größe für das Thumbnail */
+            height: 100px;
+            flex-shrink: 0; /* Verhindert, dass das Bild gestaucht wird */
+        }
+
+        .recipe-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Bild füllt den Container aus, wird beschnitten */
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+
+
+    .detail-image-container {width: 100%;
+    max-width: 600px;         /* Maximale Breite auf großen Monitoren */
+    aspect-ratio: 3 / 2;     /* Festes Seitenverhältnis */
+    margin: 1.5rem 0 2rem 0;
+        overflow: hidden;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 2rem;
+    }
+
+    .detail-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover; /* Bild füllt den Container aus */
+	object-position: center;  
+    }
 
         a { color: var(--accent-color); text-decoration: none; }
         a:hover { text-decoration: underline; }

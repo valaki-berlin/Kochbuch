@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recipe-card">
+    <h1>{{ t('import_recipe') }}</h1>
+    
+    <form action="{{ url_for('kochbuch.do_import') }}" method="POST" enctype="multipart/form-data">
+        <div style="margin: 2rem 0;">
+            <label class="btn" style="cursor: pointer; display: inline-block;">
+                {{ t('choose_file') or 'Datei auswählen' }}
+                <input type="file" name="xml_file" accept=".xml" style="display: none;">
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 15px;">
+            <button type="submit" class="btn-delete">{{ t('import_button') }}</button>
+            <a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('back_to_db') }}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

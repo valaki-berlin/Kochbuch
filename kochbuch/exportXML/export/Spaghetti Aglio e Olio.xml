@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<cookbook>
+    <recipe id="3">
+        <title>Spaghetti Aglio e Olio</title>
+        <description>Spaghetti mit Knoblauch und Olivenöl</description>
+        <ingredients>
+            <ingredient amount="200" unit="Gramm">Spaghetti</ingredient>
+            <ingredient amount="3" unit="Esslöffel">Olivenöl</ingredient>
+            <ingredient amount="1" unit="Teelöffel">Salz</ingredient>
+            <ingredient amount="0,5" unit="Teelöffel">Pfeffer</ingredient>
+        </ingredients>
+        <instructions>
+            <step order="1">Boil spaghetti in Salzed water.</step>
+            <step order="2">Sauté Knoblauch in Olivenöl.</step>
+            <step order="3">Combine pasta with oil and Knoblauch, season, serve.</step>
+        </instructions>
+    </recipe>
+</cookbook>

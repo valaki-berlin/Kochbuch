@@ -51,10 +51,10 @@ def index():
     db = get_db()
     
     if query:
-        sql = "SELECT recipe_id, title FROM recipe WHERE title_normalized LIKE ? AND is_published = 1"
+        sql = "SELECT recipe_id, title FROM recipe WHERE title_normalized LIKE ? "
         recipes = db.execute(sql, ('%' + query.lower() + '%',)).fetchall()
     else:
-        recipes = db.execute("SELECT recipe_id, title FROM recipe WHERE is_published = 1").fetchall()
+        recipes = db.execute("SELECT recipe_id, title FROM recipe").fetchall()
 
     return render_template('index.html', 
                            recipes=recipes, 
@@ -66,7 +66,7 @@ kb.add_url_rule('/recipe/new', view_func=create_recipe.show_form, methods=['GET'
 kb.add_url_rule('/recipe/<int:id>', view_func=view_recipe.show_details, endpoint='show_details')
 kb.add_url_rule('/recipe/<int:id>/edit', view_func=edit_recipe.show_edit_form, methods=['GET', 'POST'], endpoint='show_edit_form')
 kb.add_url_rule('/recipe/<int:id>/delete', view_func=view_recipe.delete_recipe, methods=['POST'], endpoint='delete_recipe')
-
+kb.add_url_rule('/import', view_func=lambda: "Import-Seite kommt bald!", endpoint='import_page')
 # --- App Konfiguration ---
 
 app.register_blueprint(kb)

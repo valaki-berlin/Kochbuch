@@ -22,7 +22,7 @@ def show_form():
         # Get data from form
         title = request.form.get('title')
         description = request.form.get('description')
-        servings = request.form.get('servings', 1)
+        servings = request.form.get('servings', 2)
         prep_time = request.form.get('prep_minutes', 0)
         cook_time = request.form.get('cook_minutes', 0)
         
