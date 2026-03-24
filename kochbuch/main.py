@@ -119,7 +119,7 @@ kb.add_url_rule('/recipe/<int:id>/edit', view_func=edit_recipe.show_edit_form, m
 kb.add_url_rule('/recipe/<int:id>/delete', view_func=view_recipe.delete_recipe, methods=['POST'], endpoint='delete_recipe')
 kb.add_url_rule('/import', view_func=import_page, methods=['GET'], endpoint='import_page')
 kb.add_url_rule('/do_import', view_func=do_import, methods=['POST'], endpoint='do_import')
-
+kb.add_url_rule('/recipe/fast_update/<int:id>', view_func=view_recipe.update_fast, methods=['POST'], endpoint='update_fast')
 
 # --- App Konfiguration ---
 

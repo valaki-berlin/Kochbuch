@@ -23,7 +23,7 @@ def get_or_create_id(cursor, table, column, value):
     
     # Default values for new units/ingredients
     if table == 'unit':
-        cursor.execute("INSERT INTO unit (name, group_code) VALUES (?, 'unknown')", (value,))
+        cursor.execute("INSERT INTO unit (name) VALUES (?)", (value,))
     else:
         cursor.execute(f"INSERT INTO {table} (name) VALUES (?)", (value,))
     return cursor.lastrowid

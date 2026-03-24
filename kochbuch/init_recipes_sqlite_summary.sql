@@ -65,9 +65,9 @@ CREATE TABLE IF NOT EXISTS recipe_step (
     recipe_id     INTEGER NOT NULL,
     step_no       INTEGER NOT NULL CHECK (step_no >= 1),
     instruction   TEXT NOT NULL,
-    timer_minutes INTEGER CHECK (timer_minutes >= 0),
+--    timer_minutes INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES recipe(recipe_id) ON DELETE CASCADE,
-    UNIQUE (recipe_id, step_no),
+    UNIQUE (recipe_id, step_no)
 );
 CREATE INDEX IF NOT EXISTS ix_recipe_step_recipe ON recipe_step(recipe_id);
 
@@ -85,11 +85,7 @@ CREATE TABLE IF NOT EXISTS ingredient (
 -- ===========================================
 CREATE TABLE IF NOT EXISTS unit (
     unit_id        INTEGER PRIMARY KEY,
-    name           TEXT NOT NULL COLLATE NOCASE UNIQUE,  -- e.g., 'gramm', 'milliliter', 'piece'
-    symbol         TEXT,                                  -- e.g., 'g', 'ml'
-    group_code     TEXT NOT NULL,                         -- 'mass'|'volume'|'count'
-    is_base        INTEGER NOT NULL DEFAULT 0,
-    factor_to_base REAL NOT NULL DEFAULT 1.0 CHECK (factor_to_base > 0)
+    name           TEXT NOT NULL COLLATE NOCASE UNIQUE
 );
 
 -- ===========================================
@@ -99,13 +95,13 @@ CREATE TABLE IF NOT EXISTS recipe_ingredient (
     recipe_id        INTEGER NOT NULL,
     ingredient_id    INTEGER NOT NULL,
     position         INTEGER NOT NULL DEFAULT 1,         -- allows repeated ingredient lines
-    quantity         INTEGER (quantity > 0),
+    quantity         INTEGER NOT NULL,
     unit_id          INTEGER NOT NULL,
     preparation_note TEXT,
     PRIMARY KEY (recipe_id, ingredient_id, position),
     FOREIGN KEY (recipe_id)     REFERENCES recipe(recipe_id)         ON DELETE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES ingredient(ingredient_id) ON DELETE RESTRICT,
-    FOREIGN KEY (unit_id)       REFERENCES unit(unit_id)             ON DELETE RESTRICT,
+    FOREIGN KEY (unit_id)       REFERENCES unit(unit_id)             ON DELETE RESTRICT
 );
 CREATE INDEX IF NOT EXISTS ix_recipe_ingredient_recipe
     ON recipe_ingredient(recipe_id);
@@ -192,21 +188,11 @@ CREATE INDEX IF NOT EXISTS ix_category_name_lower
 -- ===========================================
 -- Seed Data (minimal, incl. flexible categories)
 -- ===========================================
--- Units
-INSERT OR IGNORE INTO unit(name, symbol, group_code, is_base, factor_to_base) VALUES
- ('Gramm','g','mass',1,1.0),
- ('Kilogramm','kg','mass',0,1000.0),
- ('Milliliter','ml','volume',1,1.0),
- ('Liter','l','volume',0,1000.0),
- ('Teelöffel','tsp','volume',0,5.0),
- ('Esslöffel','tbsp','volume',0,15.0),
- ('Stück','pc','count',1,1.0);
 
 -- Ingredients
 INSERT OR IGNORE INTO ingredient(name) VALUES
- ('Tomate'),('Olivenöl'),('Knoblauch'),('Spaghetti'),('Basilikum'),('Salz'),('Pfeffer'),
- ('Rindfleisch'),('Zwiebel');
-
+ ('Knoblauch'),('Spaghetti'),('Salz'),('Pfeffer');
+ 
 -- Categories (flat)
 INSERT OR IGNORE INTO category(name) VALUES
  ('Italienisch'),('Pasta'),('Dessert'),('Chinesisch'),('Rindfleisch');
@@ -218,71 +204,23 @@ SELECT c1.category_id, c2.category_id, 'broader'
 FROM category c1, category c2
 WHERE c1.name='Italienisch' AND c2.name='Pasta';
 
--- INSERT OR IGNORE INTO category_relation(from_category_id, to_category_id, relation_type)
--- SELECT c2.category_id, c1.category_id, 'narrower'
--- FROM category c1, category c2
--- WHERE c1.name='Italienisch' AND c2.name='Pasta';
-
--- Chinesisch <-> Rindfleisch (both directions as 'related')
--- INSERT OR IGNORE INTO category_relation(from_category_id, to_category_id, relation_type)
--- SELECT c1.category_id, c2.category_id, 'related'
--- FROM category c1, category c2
--- WHERE c1.name='Chinesisch' AND c2.name='Rindfleisch';
-
--- INSERT OR IGNORE INTO category_relation(from_category_id, to_category_id, relation_type)
--- SELECT c2.category_id, c1.category_id, 'related'
--- FROM category c1, category c2
--- WHERE c1.name='Chinesisch' AND c2.name='Rindfleisch';
-
--- Tags
--- INSERT OR IGNORE INTO tag(name) VALUES ('schnell'), ('weeknight'), ('vegetarian');
-
 -- Example recipe 1: Spaghetti Aglio e Olio (Italienisch, Pasta)
-INSERT INTO recipe(title, title_normalized, description, servings, prep_minutes, cook_minutes)
-VALUES ('Spaghetti Aglio e Olio','Spaghetti Aglio e Olio','Spaghetti mit Knoblauch und Olivenöl',2,5,10);
+-- INSERT INTO recipe(title, title_normalized, description, servings, prep_minutes, cook_minutes)
+-- VALUES ('Spaghetti Aglio e Olio','Spaghetti Aglio e Olio','Spaghetti mit Knoblauch und Olivenöl',2,5,10);
 
-INSERT INTO recipe_step(recipe_id, step_no, instruction) VALUES
- ((SELECT recipe_id FROM recipe WHERE title='Spaghetti Aglio e Olio'),1,'Boil spaghetti in Salzed water.'),
- ((SELECT recipe_id FROM recipe WHERE title='Spaghetti Aglio e Olio'),2,'Sauté Knoblauch in Olivenöl.'),
- ((SELECT recipe_id FROM recipe WHERE title='Spaghetti Aglio e Olio'),3,'Combine pasta with oil and Knoblauch, season, serve.');
-
-INSERT INTO recipe_ingredient(recipe_id, ingredient_id, position, quantity, unit_id, preparation_note)
-SELECT r.recipe_id, i.ingredient_id, 1, 200,
-       (SELECT unit_id FROM unit WHERE name='Gramm'), NULL
-FROM recipe r, ingredient i
-WHERE r.title='Spaghetti Aglio e Olio' AND i.name='Spaghetti';
-
-INSERT INTO recipe_ingredient(recipe_id, ingredient_id, position, quantity, unit_id, preparation_note)
-SELECT r.recipe_id, i.ingredient_id, 2, 3,
-       (SELECT unit_id FROM unit WHERE name='Esslöffel'), NULL
-FROM recipe r, ingredient i
-WHERE r.title='Spaghetti Aglio e Olio' AND i.name='Olivenöl';
-
-INSERT INTO recipe_ingredient(recipe_id, ingredient_id, position, quantity, unit_id, preparation_note)
-SELECT r.recipe_id, i.ingredient_id, 4, 1,
-       (SELECT unit_id FROM unit WHERE name='Teelöffel'), NULL
-FROM recipe r, ingredient i
-WHERE r.title='Spaghetti Aglio e Olio' AND i.name='Salz';
-
-INSERT INTO recipe_ingredient(recipe_id, ingredient_id, position, quantity, unit_id, preparation_note)
-SELECT r.recipe_id, i.ingredient_id, 5, 0.5,
-       (SELECT unit_id FROM unit WHERE name='Teelöffel'), 'gemahlen'
-FROM recipe r, ingredient i
-WHERE r.title='Spaghetti Aglio e Olio' AND i.name='Pfeffer';
-
-INSERT OR IGNORE INTO recipe_category(recipe_id, category_id)
-SELECT r.recipe_id, c.category_id
-FROM recipe r, category c
-WHERE r.title='Spaghetti Aglio e Olio' AND c.name IN ('Pasta','Italienisch');
+-- INSERT OR IGNORE INTO recipe_category(recipe_id, category_id)
+-- SELECT r.recipe_id, c.category_id
+-- FROM recipe r, category c
+-- WHERE r.title='Spaghetti Aglio e Olio' AND c.name IN ('Pasta','Italienisch');
 
 -- INSERT OR IGNORE INTO recipe_tag(recipe_id, tag_id)
 -- SELECT r.recipe_id, t.tag_id
 -- FROM recipe r, tag t
 -- WHERE r.title='Spaghetti Aglio e Olio' AND t.name IN ('quick','weeknight','vegetarian');
 
-INSERT INTO recipe_image(recipe_id, url, is_primary, alt_text)
-SELECT r.recipe_id, 'https://example.com/images/aglio-olio.jpg', 1, 'Spaghetti Aglio e Olio'
-FROM recipe r WHERE r.title='Spaghetti Aglio e Olio';
+-- INSERT INTO recipe_image(recipe_id, url, is_primary, alt_text)
+-- SELECT r.recipe_id, 'https://example.com/images/aglio-olio.jpg', 1, 'Spaghetti Aglio e Olio'
+--FROM recipe r WHERE r.title='Spaghetti Aglio e Olio';
 
 -- Example recipe 2: Rindfleisch Stir-Fry (Chinesisch, Rindfleisch)
 
@@ -335,8 +273,8 @@ END;
 INSERT OR IGNORE INTO ingredient(name) VALUES ('Kürbis'), ('Olivenöl'), ('Salz');
 
 -- Note how we provide the normalized title 'kuerbis-suppe' for easier searching
-INSERT INTO recipe(title, title_normalized, description, servings, prep_minutes, cook_minutes)
-	VALUES ('Kürbis-Suppe', 'kuerbis-suppe', 'Wärmende Suppe für den Herbst', 4, 15, 30);
+-- INSERT INTO recipe(title, title_normalized, description, servings, prep_minutes, cook_minutes)
+-- VALUES ('Kürbis-Suppe', 'kuerbis-suppe', 'Wärmende Suppe für den Herbst', 4, 15, 30);
 
 COMMIT;
 

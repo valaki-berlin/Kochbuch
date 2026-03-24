@@ -1,15 +1,14 @@
 {% extends "base.html" %}
-
 {% block content %}
+
 <div class="recipe-card">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
         <h1 style="margin: 0;">{{ recipe.title }}</h1>
         
-        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+        <div style="display: flex; gap: 10px;">
             <a href="{{ url_for('kochbuch.show_edit_form', id=recipe.recipe_id) }}" class="btn">
                 {{ t('edit_button_text') }}
             </a>
-
             <form action="{{ url_for('kochbuch.delete_recipe', id=recipe.recipe_id) }}" method="POST" 
                   onsubmit="return confirm('{{ t('delete_confirm') }}');" style="margin: 0;">
                 <button type="submit" class="btn-delete">
@@ -18,21 +17,75 @@
             </form>
         </div>
     </div>
-    
-    <div class="detail-image-container">
-        {% if image_url %}
-            <img src="{{ image_url }}" alt="{{ recipe.title }}" class="detail-image">
-        {% else %}
-            <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Image" class="detail-image">
-        {% endif %}
+
+    <div class="detail-image-container" style="text-align: center; margin-bottom: 2rem;">
+        <img src="{{ image_url }}" alt="{{ recipe.title }}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     </div>
-    
-    <div style="margin-top: 2rem;">
+
+    <form action="{{ url_for('kochbuch.update_fast', id=recipe.recipe_id) }}" method="POST">
+        
+        <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+            <label><strong>{{ t('servings_label') }}:</strong></label>
+            <input type="number" name="servings" value="{{ recipe.servings }}" style="width: 70px; padding: 5px;">
         </div>
 
-    <div style="margin-top: 2rem;">
-        <a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('back_to_db') }}</a>
-    </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 2rem;">
+            
+            <div id="ingredients-section">
+                <h3>{{ t('ingredients_title') }}</h3>
+                <ul style="list-style: none; padding: 0;">
+                    {% for ing in ingredients %}
+                        <li style="margin-bottom: 8px; border-bottom: 1px dotted #ccc; padding-bottom: 4px; display: flex; gap: 8px;">
+                            <span style="white-space: nowrap;"><strong>{{ ing.quantity }} {{ ing.unit }}</strong></span>
+                            <span>{{ ing.name }}</span>
+                            {% if ing.note %}
+                                <span style="font-style: italic; color: #666;">({{ ing.note }})</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="instructions-section">
+                <h3>{{ t('instructions_title') }}</h3>
+                {% for step in steps %}
+                    <div style="margin-bottom: 1.5rem;">
+                        <span style="color: var(--accent-color, #d35400); font-weight: bold;">{{ loop.index }}. Step</span>
+                        <p style="margin-top: 5px; line-height: 1.6; text-align: justify;">{{ step.instruction }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 2rem;">
+            <div class="notes-container">
+                <h3>{{ t('notes_title') }}</h3>
+                <div style="display: flex; align-items: flex-end; gap: 12px;">
+                    <textarea name="notes" rows="5" style="flex-grow: 1; width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">{{ recipe.annotations }}</textarea>
+                    
+                    <button type="submit" class="btn-save-large" style="padding: 12px 25px; white-space: nowrap; height: fit-content;">
+                        {{ t('save') }}
+                    </button>
+                </div>
+            </div>
+            
+            <div class="spacer"></div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 2rem 0;">
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="categories">
+                <strong>{{ t('cat_label') }}:</strong> 
+                {% for cat in categories %}
+                    <span class="tag" style="background: #eee; padding: 3px 8px; border-radius: 3px; font-size: 0.9em; margin-right: 5px;">{{ cat.name }}</span>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('kochbuch.index') }}" class="btn" style="text-decoration: none;">
+                {{ t('back_to_db') }}
+            </a>
+        </div>
+    </form>
 </div>
 
 {% endblock %}
