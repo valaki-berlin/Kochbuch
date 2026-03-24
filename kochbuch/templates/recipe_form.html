@@ -1,19 +1,82 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="recipe-card">
-    <h2>{{ t('btn_new') if not is_edit else 'Edit Recipe' }}</h2>
-    
-    <form method="post">
-        <label for="title">Recipe Title:</label><br>
-        <input type="text" id="title" name="title" required 
-               value="{{ recipe.title if recipe else '' }}">
+
+<h1>{{ t('create_recipe') }}</h1>
+
+<form method="POST">
+    <div class="header-grid">
+        <label>{{ t('title_label') }}:</label>
+        <input name="title" required placeholder="Recipe title...">
         
-        <hr>
-        <button type="submit" class="btn" style="background-color: #ffb000; color: #000;">
-            {{ t('save') }}
-        </button>
-        <a href="{{ url_for('kochbuch.index') }}" class="btn" style="background: none; border: 1px solid var(--border-color);">{{ t('cancel') }}</a>
-    </form>
-</div>
+        <label style="text-align: right;">{{ t('servings_label') }}:</label>
+        <input type="number" name="servings" value="2">
+
+        <label>{{ t('cat_label') }}:</label>
+        <input name="categories" placeholder="e.g. Pasta, Italian, Quick">
+        
+        <label style="text-align: right;">{{ t('tested_label') }}:</label>
+        <select name="is_tested">
+            <option value="false">{{ t('no') }}</option>
+            <option value="true">{{ t('yes') }}</option>
+        </select>
+
+        <label>{{ t('source_label') }}:</label>
+        <input name="source" placeholder="URL, Cookbook page, etc.">
+        </div>
+
+    <h2>{{ t('ingredients_title') }}</h2>
+    <table id="zutaten" class="ing-table">
+        <thead>
+            <tr>
+                <th style="width: 15%; text-align: left;">{{ t('amount_head') }}</th>
+                <th style="width: 20%; text-align: left;">{{ t('unit_head') }}</th>
+                <th style="text-align: left;">{{ t('ing_head') }}</th>
+                <th style="width: 50px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input name="amount[]" list="mengenListe"></td>
+                <td style="padding-right: 25px;"><input name="unit[]" list="einheitenListe"></td>
+                <td style="width: 35%;"><input name="ingredient[]" list="zutatenListe"></td>
+                <td></td> </tr>
+        </tbody>
+    </table>
+    
+    <div class="form-actions-left" style="margin-top: 5px;">
+        <button type="button" onclick="addRow()" class="btn-add">+ {{ t('add_ingredient') }}</button>
+    </div>
+
+    <h2>{{ t('instructions_title') }}</h2>
+    <textarea name="instructions" rows="10" placeholder="Step 1&#10;&#10;Step 2..."></textarea>
+
+    <h2>{{ t('notes_title') }}</h2>
+    <textarea name="notes" rows="5"></textarea>
+
+    <div class="form-actions-left" style="margin-top: 40px;">
+        <button type="submit" class="btn-save-large">{{ t('save_btn') }}</button>
+    </div>
+</form>
+
+<datalist id="einheitenListe"></datalist>
+<datalist id="mengenListe"></datalist>
+<datalist id="zutatenListe"></datalist>
+
+<script>
+/**
+ * Adds a new row to the ingredient table
+ */
+function addRow() {
+    const tbody = document.querySelector('#zutaten tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td><input name="amount[]" list="mengenListe"></td>
+        <td style="padding-right: 25px;"><input name="unit[]" list="einheitenListe"></td>
+        <td style="width: 35%;"><input name="ingredient[]" list="zutatenListe"></td>
+        <td><button type="button" onclick="this.closest('tr').remove()" class="btn-remove">✕</button></td>
+    `;
+    tbody.appendChild(row);
+}
+</script>
+
 {% endblock %}

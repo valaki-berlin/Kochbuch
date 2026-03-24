@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS recipe (
     title_normalized   TEXT NOT NULL COLLATE NOCASE,
     description   TEXT,
     annotations   TEXT,
+    original_source TEXT,
     servings      INTEGER CHECK (servings > 0),
     prep_minutes  INTEGER CHECK (prep_minutes >= 0),
     cook_minutes  INTEGER CHECK (cook_minutes >= 0),

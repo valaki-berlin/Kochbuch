@@ -222,6 +222,133 @@
 	object-position: center;  
     }
 
+/* Layout helpers for forms */
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 30px;
+}
+
+.ing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.ing-table th {
+    text-align: left;
+    padding-bottom: 10px;
+    color: var(--accent-color); /* Nutzt deine Projekt-Variable */
+    border: none;
+}
+
+.ing-table td {
+    padding: 5px 0;
+    border: none;
+}
+
+.btn-add {
+    background-color: var(--secondary-amber);
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-save-large {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.btn-remove {
+    color: #ff4444;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* base.html <style> update */
+
+/* Light inputs for better readability */
+input, textarea, select {
+    background-color: #fdfdfd !important;
+    color: #1a1a1a !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: inherit;
+    box-sizing: border-box; /* Crucial for width/padding matching */
+}
+
+/* Header Grid: Label | Wide Input | Right Label | Right Input */
+/* Adjusted min-widths for numerical inputs on the right */
+.header-grid {
+    display: grid;
+    grid-template-columns: 100px 5fr 100px 5fr  100px;
+    gap: 12px 12px;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header-grid label {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Ingredients Table Styling */
+.ing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 5px;
+}
+
+.ing-table th {
+    text-align: left;
+    color: var(--accent-color);
+    padding-bottom: 8px;
+}
+
+/* Set specific widths for Amount/Unit columns to force gap with Ingredient */
+.ing-table .col-amount {
+    width: 15%;
+}
+
+.ing-table .col-unit {
+    width: 20%;
+    padding-right: 25px; /* Creates the gap towards Ingredient field */
+}
+
+.ing-table input {
+    width: 100%;
+}
+
+/* Restrict Instructions/Notes to line up with the Unit column */
+/* They take the same combined percentage as Amount + Unit */
+textarea[name="instructions"],
+textarea[name="notes"] {
+    width: 70%; /* Total of .col-amount + .col-unit */
+    min-width: 350px; /* Optional min-width for usability */
+    display: block; /* Ensure they are block elements */
+}
+
+.btn-remove {
+    color: #ff4444;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+
         a { color: var(--accent-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
