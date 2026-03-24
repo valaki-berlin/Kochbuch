@@ -35,7 +35,7 @@ def parse_amount(amount_str, ingredient_name):
     Raises ValueError for invalid formats like '500+250'.
     """
     if not amount_str or amount_str.strip() == "":
-        amount_str = "1"
+        amount_str = "0"
         
     cleaned = amount_str.replace(',', '.')
     try:

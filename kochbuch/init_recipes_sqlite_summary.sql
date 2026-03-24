@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS recipe_step (
     instruction   TEXT NOT NULL,
     timer_minutes INTEGER CHECK (timer_minutes >= 0),
     FOREIGN KEY (recipe_id) REFERENCES recipe(recipe_id) ON DELETE CASCADE,
-    UNIQUE (recipe_id, step_no)
+    UNIQUE (recipe_id, step_no),
 );
 CREATE INDEX IF NOT EXISTS ix_recipe_step_recipe ON recipe_step(recipe_id);
 
@@ -98,13 +98,13 @@ CREATE TABLE IF NOT EXISTS recipe_ingredient (
     recipe_id        INTEGER NOT NULL,
     ingredient_id    INTEGER NOT NULL,
     position         INTEGER NOT NULL DEFAULT 1,         -- allows repeated ingredient lines
-    quantity         REAL NOT NULL CHECK (quantity > 0),
+    quantity         INTEGER (quantity > 0),
     unit_id          INTEGER NOT NULL,
     preparation_note TEXT,
     PRIMARY KEY (recipe_id, ingredient_id, position),
     FOREIGN KEY (recipe_id)     REFERENCES recipe(recipe_id)         ON DELETE CASCADE,
     FOREIGN KEY (ingredient_id) REFERENCES ingredient(ingredient_id) ON DELETE RESTRICT,
-    FOREIGN KEY (unit_id)       REFERENCES unit(unit_id)             ON DELETE RESTRICT
+    FOREIGN KEY (unit_id)       REFERENCES unit(unit_id)             ON DELETE RESTRICT,
 );
 CREATE INDEX IF NOT EXISTS ix_recipe_ingredient_recipe
     ON recipe_ingredient(recipe_id);

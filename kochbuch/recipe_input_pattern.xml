@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cookbook>
+	<processing_rules>
+        <rule>Wenn keine numerische Menge vorliegt (z.B. "eine Prise", "nach Belieben"), bleibt 'amount' leer oder 0.</rule>
+        <rule>Textuelle Mengenangaben gehören ausschließlich in das Attribut 'unit'.</rule>
+        <rule>Wähle für das Attribut 'unit' nach Möglichkeit abgekürzte ISO-Einheiten, aslo kg anstatt Kilogramm.</rule>
+        <rule>Rechne Mengen in anderen Massen (imperial, Tassen etc.) nach Möglichkeit in ISO-Einheiten um.</rule>
+        <rule>In 'amount' dürfen nur ganze Zahlen stehen. Sollten im Urspungsrezept Brüche stehen, wie z.B. 0,5 kg, dann rechne bitte sinnvoll in die nächstkleinere Einheit um.</rule>
+        <rule>Rechne alle Massangaben auf ein Rezept für zwei Personen um.</rule>
+
+    </processing_rules>
+    
+	<recipe>
+        <title>Rezepttitel</title>
+        <description>Kurzbeschreibung</description>
+        <ingredients>
+            <ingredient amount="ZAHL" unit="EINHEIT/TEXT">Zutat1</ingredient>
+            <ingredient amount="ZAHL" unit="EINHEIT/TEXT">Zutat2</ingredients>
+        <instructions>
+            <step order="1">Erster Schritt.</step>
+            <step order="2">Zweiter Schritt.</step> 
+            <step order="2">Et cetera</step> 
+
+        </instructions>
+        
+        <notes>Notizen</notes>
+    </recipe>
+</cookbook>
