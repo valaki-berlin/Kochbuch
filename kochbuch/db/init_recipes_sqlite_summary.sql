@@ -36,8 +36,6 @@ CREATE TABLE IF NOT EXISTS recipe (
     annotations   TEXT,
     original_source TEXT,
     servings      INTEGER CHECK (servings > 0),
-    prep_minutes  INTEGER CHECK (prep_minutes >= 0),
-    cook_minutes  INTEGER CHECK (cook_minutes >= 0),
     is_tested     INTEGER NOT NULL DEFAULT 1 CHECK (is_tested IN (0,1)),
     created_at         TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
@@ -65,7 +63,6 @@ CREATE TABLE IF NOT EXISTS recipe_step (
     recipe_id     INTEGER NOT NULL,
     step_no       INTEGER NOT NULL CHECK (step_no >= 1),
     instruction   TEXT NOT NULL,
---    timer_minutes INTEGER NOT NULL,
     FOREIGN KEY (recipe_id) REFERENCES recipe(recipe_id) ON DELETE CASCADE,
     UNIQUE (recipe_id, step_no)
 );
@@ -205,7 +202,7 @@ FROM category c1, category c2
 WHERE c1.name='Italienisch' AND c2.name='Pasta';
 
 -- Example recipe 1: Spaghetti Aglio e Olio (Italienisch, Pasta)
--- INSERT INTO recipe(title, title_normalized, description, servings, prep_minutes, cook_minutes)
+-- INSERT INTO recipe(title, title_normalized, description, servings)
 -- VALUES ('Spaghetti Aglio e Olio','Spaghetti Aglio e Olio','Spaghetti mit Knoblauch und Olivenöl',2,5,10);
 
 -- INSERT OR IGNORE INTO recipe_category(recipe_id, category_id)
@@ -273,7 +270,7 @@ END;
 INSERT OR IGNORE INTO ingredient(name) VALUES ('Kürbis'), ('Olivenöl'), ('Salz');
 
 -- Note how we provide the normalized title 'kuerbis-suppe' for easier searching
--- INSERT INTO recipe(title, title_normalized, description, servings, prep_minutes, cook_minutes)
+-- INSERT INTO recipe(title, title_normalized, description, servings)
 -- VALUES ('Kürbis-Suppe', 'kuerbis-suppe', 'Wärmende Suppe für den Herbst', 4, 15, 30);
 
 COMMIT;

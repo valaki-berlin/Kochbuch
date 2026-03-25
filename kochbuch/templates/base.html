@@ -276,7 +276,133 @@
     cursor: pointer;
 }
 
-/* base.html <style> update */
+/* Grid for the header section (Title, Description, Category, Image) */
+.recipe-edit-header-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+.recipe-edit-header-grid label {
+    font-weight: bold;
+}
+
+/* Specific class for inputs within the grid to ensure uniform alignment */
+.grid-input {
+    height: auto !important;
+    margin: 0 !important;
+}
+
+/* Row for servings, indented to match the grid's vertical line */
+.servings-row {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-left: 200px;
+}
+/* Styling for the is_tested checkbox row */
+.servings-tested-row {
+    display: flex;
+    align-items: center; /* Vertical center alignment */
+    gap: 20px; /* Space between servings input and tested checkbox */
+    margin-bottom: 1.5rem;
+}
+
+.tested-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the checkbox and its label text */
+    cursor: pointer; /* Change cursor to pointer over the label as well */
+}
+
+/* Customize the checkbox appearance (optional, standard amber accent) */
+.tested-checkbox-container input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #ff9f43; /* Amber color to match other buttons */
+}
+/* Main content layout (Ingredients vs. Instructions) */
+.recipe-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+/* Container for the 40/60 split, ensuring full width usage */
+.recipe-content-split-grid {
+    display: grid; 
+    grid-template-columns: 50% 50%; 
+    gap: 30px; 
+    margin-bottom: 2rem; 
+    width: 100%; 
+    box-sizing: border-box;
+}
+
+/* Ensure textareas in the grid take up all available horizontal space */
+.full-width-textarea {
+    width: 100%; 
+    min-height: 300px; 
+    line-height: 1.5; 
+    font-family: inherit; 
+    margin: 0; 
+    box-sizing: border-box;
+}
+
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+/* Styling for the dynamic ingredient addition button */
+.btn-add-ingredient {
+    background-color: #ff9f43; /* Amber color matching the save button */
+    color: #1a1a1a; /* Dark text for contrast */
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.btn-add-ingredient:hover {
+    background-color: #ffaf63; /* Lighter amber on hover */
+}
+
+/* Container to align the add button to the right */
+.ingredient-action-container {
+    text-align: right;
+    margin-bottom: 1rem;
+}
+/* Align text to the right for all inputs within an ingredient row */
+.ingredient-edit-row input {
+    text-align: right;
+}
+
+/* Optional: Add a small padding to the right so text doesn't touch the border */
+.ingredient-edit-row input {
+    padding-right: 8px;
+    box-sizing: border-box;
+}
+
+/* Footer area containing action buttons */
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    border-top: 1px solid #444;
+    padding-top: 2rem;
+}
+
 
 /* Light inputs for better readability */
 input, textarea, select {
@@ -339,7 +465,12 @@ textarea[name="notes"] {
     min-width: 350px; /* Optional min-width for usability */
     display: block; /* Ensure they are block elements */
 }
-
+/* Ensure the instruction textarea provides enough space for long recipes */
+textarea[name="steps_text"] {
+    min-height: 350px;
+    line-height: 1.5;
+    font-family: inherit;
+}
 .btn-remove {
     color: #ff4444;
     background: none;
@@ -425,5 +556,33 @@ textarea[name="notes"] {
         <hr>
         <p><small>Terminal access: Raspberry Pi 2 | SQLite 3 | Lab Status: Online</small></p>
     </footer>
+
+<script>
+/**
+ * Dynamically adds a new ingredient input row to the form.
+ * Uses the translations provided globally by Flask.
+ */
+function addIngredientRow() {
+    const container = document.getElementById('ingredient-rows');
+    const firstRow = container.querySelector('.ingredient-edit-row');
+    
+    if (firstRow) {
+        // Clone the first row to maintain styles and structure
+        const newRow = firstRow.cloneNode(true);
+        
+        // Clear all input values in the new row
+        newRow.querySelectorAll('input').forEach(input => {
+            input.value = '';
+        });
+        
+        // Append the new row to the container
+        container.appendChild(newRow);
+    } else {
+        // Fallback if no rows exist (should not happen with initial setup)
+        console.error("Could not find base ingredient row to clone.");
+    }
+}
+</script>
+
 </body>
 </html>

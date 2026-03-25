@@ -17,7 +17,7 @@ import import_recipe
 DATABASE = 'db/RezeptDB.db'
 
 # Temporary directory for uploaded XML files
-UPLOAD_FOLDER = 'temp_uploads'
+UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
