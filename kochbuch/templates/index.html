@@ -15,7 +15,6 @@
                 <input type="text" name="ingredients" id="search_ingredients" value="{{ request.args.get('ingredients', '') }}">
                 <button type="submit" class="btn-delete">{{ t('search_button') }}</button>
             </div>
-            
         </form>
     </div>
 
@@ -39,9 +38,11 @@
                             
                             <div class="recipe-image-container-index">
                                 {% if recipe.image_url %}
-                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="recipe-thumbnail-index">
+				    <img src="{{ url_for('static', filename='recipe_images/' + recipe.image_url) }}" 
+             				alt="{{ recipe.title }}" class="recipe-thumbnail-index">
                                 {% else %}
-                                    <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Image" class="recipe-thumbnail-index">
+                                    <img src="{{ url_for('static', filename='images/default.jpg') }}" 
+					alt="Default Image" class="recipe-thumbnail-index">
                                 {% endif %}
                             </div>
                             

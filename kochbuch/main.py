@@ -5,6 +5,7 @@ from flask import Flask, Blueprint, render_template, request, g, flash, redirect
 from werkzeug.middleware.proxy_fix import ProxyFix 
 from werkzeug.utils import secure_filename
 from strings import TRANSLATIONS
+from filter import build_filter_query
 
 from database import get_db
 
@@ -22,7 +23,7 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 app = Flask(__name__)
-
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 app.secret_key = 'super-secret-terminal-key-123'
 
 @app.context_processor
@@ -57,19 +58,30 @@ def get_string(key):
 
 @kb.route('/')
 def index():
-    query = request.args.get('search', '')
+    """
+    Main index route that handles the multi-field search logic.
+    Delegates SQL construction to filter.py.
+    """
     db = get_db()
     
-    if query:
-        sql = "SELECT recipe_id, title FROM recipe WHERE title_normalized LIKE ? "
-        recipes = db.execute(sql, ('%' + query.lower() + '%',)).fetchall()
-    else:
-        recipes = db.execute("SELECT recipe_id, title FROM recipe").fetchall()
+    # Get the individual search parameters from the GET request
+    # These match the 'name' attributes in your index.html form
+    search_title = request.args.get('title', '').strip()
+    search_category = request.args.get('category', '').strip()
+    search_ingredients = request.args.get('ingredients', '').strip()
 
+    # Call the logic to build the SQL query and parameters
+    query, params = build_filter_query(search_title, search_category, search_ingredients)
+
+    # Execute the query and fetch all matching recipes
+    recipes = db.execute(query, params).fetchall()
+
+    # Note: We no longer need search_query=query, as index.html 
+    # accesses parameters directly via request.args.get(...)
     return render_template('index.html', 
                            recipes=recipes, 
-                           t=get_string, 
-                           search_query=query)
+                           t=get_string)
+
 
 def import_page():
     """Renders the upload form for XML import."""

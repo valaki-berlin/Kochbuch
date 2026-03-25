@@ -30,7 +30,13 @@ def show_details(id):
     db = get_db()
     
     # 1. Fetch core recipe data (including annotations and servings)
-    recipe = db.execute("SELECT * FROM recipe WHERE recipe_id = ?", (id,)).fetchone()
+    recipe = db.execute("""
+        SELECT r.*, ri.url AS image_url 
+        FROM recipe r 
+        LEFT JOIN recipe_image ri ON r.recipe_id = ri.recipe_id AND ri.is_primary = 1
+        WHERE r.recipe_id = ?
+        """, (id,)).fetchone()
+#    recipe = db.execute("SELECT * FROM recipe WHERE recipe_id = ?", (id,)).fetchone()
     if recipe is None:
         abort(404)
         

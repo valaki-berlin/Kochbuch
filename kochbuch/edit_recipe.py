@@ -2,6 +2,58 @@
 from flask import render_template, request, redirect, url_for, flash
 from database import get_db
 import re
+import os
+from PIL import Image
+from werkzeug.utils import secure_filename
+
+# Configuration
+UPLOAD_FOLDER = 'static/recipe_images'
+TARGET_WIDTH = 600
+
+def handle_image_upload(recipe_id, db):
+    """
+    Handles the image file from the request, resizes it,
+    and updates the recipe_image table.
+    """
+    if 'image_file' not in request.files:
+        return None
+    
+    file = request.files['image_file']
+    
+    if file and file.filename != '':
+        # 1. Prepare filename and paths
+        # We use the recipe_id to keep it unique and overwrite old images
+        ext = os.path.splitext(file.filename)[1].lower()
+        if ext not in ['.jpg', '.jpeg', '.png', '.webp']:
+            return None # Or raise an error
+            
+        filename = f"recipe_{recipe_id}{ext}"
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
+            
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+
+        # 2. Resize with Pillow
+        try:
+            img = Image.open(file)
+            # Maintain aspect ratio
+            w_percent = (TARGET_WIDTH / float(img.size[0]))
+            h_size = int((float(img.size[1]) * float(w_percent)))
+            img = img.resize((TARGET_WIDTH, h_size), Image.Resampling.LANCZOS)
+            
+            # 3. Save as JPEG to save space (optional, or keep original format)
+            img.save(filepath, optimize=True, quality=85)
+            
+            # 4. Database update (Delete old entries for this recipe first)
+            db.execute("DELETE FROM recipe_image WHERE recipe_id = ?", (recipe_id,))
+            db.execute("INSERT INTO recipe_image (recipe_id, url, is_primary) VALUES (?, ?, 1)",
+                       (recipe_id, filename))
+            return filename
+        except Exception as e:
+            print(f"Error processing image: {e}")
+            return None
+    return None
+
 
 def manage_recipe(id=None):
     """
@@ -85,10 +137,9 @@ def manage_recipe(id=None):
             db.execute("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?,?)", (rid, cid))
 
         # C) Handle Image
-        db.execute("DELETE FROM recipe_image WHERE recipe_id = ?", (rid,))
-        if img_input:
-            db.execute("INSERT INTO recipe_image (recipe_id, url, is_primary) VALUES (?, ?, 1)", (rid, img_input))
-
+        # Handle the image upload
+        handle_image_upload(rid, db)
+        
         # D) Handle Steps (Delete then parse and Insert)
         db.execute("DELETE FROM recipe_step WHERE recipe_id = ?", (rid,))
         processed_steps = re.split(r'\n\s*\n', raw_steps.strip())

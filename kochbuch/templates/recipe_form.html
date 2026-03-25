@@ -1,77 +1,100 @@
 {% extends "base.html" %}
-{% block content %}
 
+{% block content %}
 <div class="recipe-card">
     <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 2rem;">
         <a href="{{ url_for('kochbuch.index') }}" class="btn">
             ← {{ t('back_to_db') }}
         </a>
         <h1 style="margin: 0; font-size: 1.8rem;">
-            {% if recipe.recipe_id %}{{ t('edit_button_text') }}{% else %}{{ t('create_recipe') }}{% endif %}
+            {% if recipe and recipe.recipe_id %}
+                {{ t('edit_button_text') }}: {{ recipe.title }}
+            {% else %}
+                {{ t('create_recipe') }}
+            {% endif %}
         </h1>
-    </div> 
+    </div>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div class="recipe-edit-header-grid">
             <label>{{ t('title_label') }}:</label>
-            <input type="text" name="title" value="{{ recipe.title if recipe else '' }}" class="notes-textarea grid-input" required>
+            <input type="text" name="title" value="{{ recipe.title if recipe else '' }}" 
+                   class="grid-input" required placeholder="Rezeptname...">
 
             <label>Beschreibung:</label>
-            <input type="text" name="description" value="{{ recipe.description if recipe else '' }}" class="notes-textarea grid-input">
+            <input type="text" name="description" value="{{ recipe.description if recipe else '' }}" 
+                   class="grid-input" placeholder="Kurze Beschreibung oder Herkunft...">
 
             <label>{{ t('cat_label') }}:</label>
             <input type="text" name="category" value="{{ category_name }}" 
-                   class="notes-textarea grid-input" list="category_list" 
-                   oninput="filterDatalist(this, 'category_list')" autocomplete="off">
+                   class="grid-input" list="category_list" 
+                   oninput="filterDatalist(this, 'category_list')" 
+                   autocomplete="off" placeholder="z.B. Pasta, Dessert...">
 
             <label>{{ t('image_label') }}:</label>
-            <input type="text" name="image_url" value="{{ image_url }}" class="notes-textarea grid-input">
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <input type="file" name="image_file" accept="image/*" class="grid-input">
+                {% if image_url %}
+                    <small style="color: var(--secondary-amber); font-style: italic;">
+                        Aktuell: {{ image_url }} 
+                        <span style="color: var(--text-color); opacity: 0.6;">(Wird bei neuem Upload ersetzt)</span>
+                    </small>
+                {% else %}
+                    <small style="color: var(--text-color); opacity: 0.5;">Kein Bild verknüpft (Standardbild wird genutzt)</small>
+                {% endif %}
+            </div>
         </div>
 
-<div class="servings-tested-row">
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <label>{{ t('servings_label') }}:</label>
-        <input type="number" name="servings" value="{{ recipe.servings if recipe else 2 }}" 
-               class="calculator-input" style="width: 70px;">
-    </div>
+        <div class="servings-tested-row">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label>{{ t('servings_label') }}:</label>
+                <input type="number" name="servings" value="{{ recipe.servings if recipe else 2 }}" 
+                       class="calculator-input" style="width: 60px; text-align: center;">
+            </div>
 
-    <label class="tested-checkbox-container">
-        <input type="checkbox" name="is_tested" id="is_tested_checkbox"
-               {% if recipe and recipe.is_tested %}checked{% endif %}>
-        <span>{{ t('tested_label') }}</span> </label>
-</div>
+            <label class="tested-checkbox-container">
+                <input type="checkbox" name="is_tested" {% if recipe and recipe.is_tested %}checked{% endif %}>
+                <span>{{ t('tested_label') }}</span>
+            </label>
+        </div>
+
+        <hr style="border-color: var(--border-color); margin: 2rem 0;">
 
         <div class="recipe-content-split-grid">
-            <div style="width: 100%;">
+            
+            <div>
                 <h3>{{ t('ingredients_title') }}</h3>
                 <div id="ingredient-rows">
-                    {% set ing_list = ingredients if ingredients else [{},{},{},{},{},{}] %}
-                    {% for ing in ing_list %}
-                    <div class="ingredient-edit-row">
-                        <input type="text" name="qty" value="{{ ing.quantity if ing.quantity else '' }}" 
-                               placeholder="{{ t('amount_head') }}" class="calculator-input" style="width: 65px;">
-                        
-                        <input type="text" name="unit" value="{{ ing.unit if ing.unit else '' }}" 
-                               placeholder="{{ t('unit_head') }}" class="calculator-input" 
-                               style="width: 85px;" list="unit_list" 
-                               oninput="filterDatalist(this, 'unit_list')" autocomplete="off">
-                        
-                        <input type="text" name="ing_name" value="{{ ing.name if ing.name else (ing.ing_name if ing.ing_name else '') }}" 
-                               placeholder="{{ t('ing_head') }}" class="calculator-input" 
-                               style="flex-grow: 1;" list="ingredient_list" 
-                               oninput="filterDatalist(this, 'ingredient_list')" autocomplete="off">
-                    </div>
-                    {% endfor %}
+                    {% if ingredients %}
+                        {% for ing in ingredients %}
+                        <div class="ingredient-edit-row">
+                            <input type="text" name="qty" value="{{ ing.quantity }}" placeholder="Menge" style="width: 60px;">
+                            <input type="text" name="unit" value="{{ ing.unit }}" placeholder="Einh." 
+                                   list="unit_list" oninput="filterDatalist(this, 'unit_list')" style="width: 80px;">
+                            <input type="text" name="ing_name" value="{{ ing.ing_name }}" placeholder="Zutat" 
+                                   list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" style="flex-grow: 1;">
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="ingredient-edit-row">
+                            <input type="text" name="qty" placeholder="Menge" style="width: 60px;">
+                            <input type="text" name="unit" placeholder="Einh." list="unit_list" oninput="filterDatalist(this, 'unit_list')" style="width: 80px;">
+                            <input type="text" name="ing_name" placeholder="Zutat" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" style="flex-grow: 1;">
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="ingredient-action-container">
-                    <button type="button" class="btn-add-ingredient" onclick="addIngredientRow()">+</button>
+                    <button type="button" class="btn" onclick="addIngredientRow()"> + </button>
                 </div>
             </div>
 
-            <div style="width: 100%; display: flex; flex-direction: column;">
+            <div>
                 <h3>{{ t('instructions_title') }}</h3>
-                <textarea name="steps_text" class="notes-textarea full-width-textarea" 
-                          placeholder="Instructions...">{{ steps_text }}</textarea>
+                <p style="font-size: 0.85rem; color: var(--secondary-amber); margin-bottom: 10px;">
+                    Tipp: Leerzeile zwischen den Schritten erzeugt separate Blöcke.
+                </p>
+                <textarea name="steps_text" class="full-width-textarea" 
+                          placeholder="Schritt 1...&#10;&#10;Schritt 2...">{{ steps_text }}</textarea>
             </div>
         </div>
 
@@ -82,17 +105,15 @@
     </form>
 </div>
 
-<div id="master-data" style="display:none;">
-    <select id="master-unit">
-        {% for u in all_units %}<option value="{{ u.name }}">{% endfor %}
-    </select>
-    <select id="master-ingredient">
-        {% for i in all_ingredients %}<option value="{{ i.name }}">{% endfor %}
-    </select>
-    <select id="master-category">
-        {% for c in all_categories %}<option value="{{ c.name }}">{% endfor %}
-    </select>
-</div>
+<select id="master-unit" style="display:none;">
+    {% for unit in all_units %}<option value="{{ unit.name }}">{% endfor %}
+</select>
+<select id="master-ingredient" style="display:none;">
+    {% for ing in all_ingredients %}<option value="{{ ing.name }}">{% endfor %}
+</select>
+<select id="master-category" style="display:none;">
+    {% for cat in all_categories %}<option value="{{ cat.name }}">{% endfor %}
+</select>
 
 <datalist id="unit_list"></datalist>
 <datalist id="ingredient_list"></datalist>
@@ -101,15 +122,11 @@
 <script>
 /**
  * Filters datalist options to only show entries starting with the input string.
- * Uses hidden master selects as a permanent data source.
- * @param {HTMLElement} input - The input field.
- * @param {string} listId - The ID of the datalist to populate.
  */
 function filterDatalist(input, listId) {
     const val = input.value.toLowerCase();
     const datalist = document.getElementById(listId);
     
-    // Map listId to the corresponding master select ID
     let masterId = '';
     if (listId === 'unit_list') masterId = 'master-unit';
     else if (listId === 'ingredient_list') masterId = 'master-ingredient';
@@ -118,18 +135,11 @@ function filterDatalist(input, listId) {
     const masterSelect = document.getElementById(masterId);
     if (!masterSelect) return;
     
-    const options = masterSelect.options;
-    
-    // Clear current datalist to rebuild it
     datalist.innerHTML = '';
-    
-    // If input is empty, don't show any suggestions (optional, clear view)
     if (val.length === 0) return;
 
-    // Filter and add matching options
-    for (let i = 0; i < options.length; i++) {
-        const optionValue = options[i].value;
-        // Check if option starts with the input value
+    for (let i = 0; i < masterSelect.options.length; i++) {
+        const optionValue = masterSelect.options[i].value;
         if (optionValue.toLowerCase().startsWith(val)) {
             const opt = document.createElement('option');
             opt.value = optionValue;

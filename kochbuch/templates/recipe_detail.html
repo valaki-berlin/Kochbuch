@@ -22,10 +22,16 @@
     </div>
 
     <div class="detail-image-container">
-        <img src="{{ image_url }}" alt="{{ recipe.title }}" class="detail-image">
+        {% if recipe.image_url %}
+            <img src="{{ url_for('static', filename='recipe_images/' + recipe.image_url) }}" 
+                 alt="{{ recipe.title }}" class="detail-image">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/default.jpg') }}" 
+                 alt="Default Image" class="detail-image">
+        {% endif %}
     </div>
 
-<div class="calculator-container" style="display: flex; align-items: center; gap: 20px;">
+    <div class="calculator-container" style="display: flex; align-items: center; gap: 20px;">
         <div style="display: flex; align-items: center; gap: 10px;">
             <label><strong>{{ t('servings_label') }}:</strong></label>
             <input type="number" id="servings-calculator" class="calculator-input" 
@@ -33,7 +39,7 @@
         </div>
 
         {% if recipe.is_tested %}
-        <div style="display: flex; align-items: center; gap: 6px; color: #ff9f43; font-weight: bold; border-left: 1px solid #444; padding-left: 20px;">
+        <div style="display: flex; align-items: center; gap: 6px; color: var(--accent-color); font-weight: bold; border-left: 1px solid #444; padding-left: 20px;">
             <span style="font-size: 1.2em;">✓</span>
             <span>{{ t('tested_label') }}</span>
         </div>
@@ -44,33 +50,38 @@
         
         <div id="ingredients-section">
             <h3>{{ t('ingredients_title') }}</h3>
-            <ul style="list-style: none; padding: 0;">
-                {% for ing in ingredients %}
-                    <li style="margin-bottom: 8px; border-bottom: 1px dotted #444; padding-bottom: 4px; display: flex; gap: 8px;">
-                        <span style="white-space: nowrap;">
-                            {% set clean_qty = ing.quantity|replace(',', '.')|float %}
-                            <strong class="qty-val" data-base="{{ clean_qty / recipe.servings }}">
-                                {{ ing.quantity }}
-                            </strong> 
-                            <strong>{{ ing.unit }}</strong>
-                        </span>
-                        <span>{{ ing.name }}</span>
-                        {% if ing.note %}
-                            <span style="font-style: italic; color: #888; margin-left: 4px;">({{ ing.note }})</span>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
+            <table style="border-collapse: collapse; border: none; width: 100%;">
+                <tbody>
+                    {% for ing in ingredients %}
+                    <tr>
+                        <td style="text-align: right; padding: 5px 15px 5px 0; white-space: nowrap; vertical-align: top; width: 120px;">
+                            <span class="qty-val-plain" data-base="{{ ing.quantity }}">
+                                {{ ing.quantity | replace('.', ',') if ing.quantity else '' }}
+                            </span>
+                            <span style="color: var(--text-color); margin-left: 4px;">{{ ing.unit }}</span>
+                        </td>
+                        
+                        <td style="text-align: left; padding: 5px 0; vertical-align: top; color: var(--text-color);">
+                            {{ ing.ing_name if ing.ing_name else ing.name }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
         <div id="instructions-section">
             <h3>{{ t('instructions_title') }}</h3>
-            {% for step in steps %}
-                <div style="margin-bottom: 1.5rem;">
-                    <span style="color: #ffb000; font-weight: bold;">Step {{ loop.index }}</span>
-                    <p style="margin-top: 5px; line-height: 1.6;">{{ step.instruction }}</p>
-                </div>
-            {% endfor %}
+            {% if steps %}
+                {% for step in steps %}
+                    <div style="margin-bottom: 1.5rem;">
+                        <span style="font-weight: bold;">{{ loop.index }}.</span>
+                        <p style="margin-top: 5px; line-height: 1.6; display: inline;">{{ step.instruction }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p><i>Keine Schritte hinterlegt.</i></p>
+            {% endif %}
         </div>
     </div>
 
@@ -78,14 +89,13 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 2rem;">
             <div>
                 <h3>{{ t('notes_title') }}</h3>
-                <div class="notes-flex-container">
-                    <textarea name="notes" rows="5" class="notes-textarea">{{ recipe.annotations }}</textarea>
-                    <button type="submit" class="btn-save-large" style="white-space: nowrap;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <textarea name="notes" rows="5" class="notes-textarea" style="width: 100%;">{{ recipe.annotations }}</textarea>
+                    <button type="submit" class="btn-save-large" style="align-self: flex-start;">
                         {{ t('save') }}
                     </button>
                 </div>
             </div>
-            <div class="spacer"></div>
         </div>
     </form>
 
@@ -93,7 +103,9 @@
         <div>
             <strong>{{ t('cat_label') }}:</strong>
             {% for cat in categories %}
-                <span style="background: #333; padding: 3px 8px; border-radius: 3px; margin-right: 5px;">{{ cat.name }}</span>
+                <span style="background: var(--panel-color); border: 1px solid var(--border-color); padding: 3px 8px; border-radius: 3px; margin-right: 5px; font-size: 0.85rem;">
+                    {{ cat.name }}
+                </span>
             {% endfor %}
         </div>
         <a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('back_to_db') }}</a>
@@ -101,16 +113,24 @@
 </div>
 
 <script>
+/**
+ * Berechnet die Mengen basierend auf der Personenanzahl neu.
+ * Geht davon aus, dass die Basis-Mengen in der DB für 1 Person (oder die im Rezept angegebene Menge) sind.
+ */
 function calculateMengen() {
-    const newServings = parseFloat(document.getElementById('servings-calculator').value);
-    // Safety check to avoid division by zero or empty values
+    const input = document.getElementById('servings-calculator');
+    const newServings = parseFloat(input.value);
+    const originalServings = parseFloat("{{ recipe.servings if recipe.servings else 1 }}");
+
     if (isNaN(newServings) || newServings <= 0) return;
 
-    document.querySelectorAll('.qty-val').forEach(field => {
+    const ratio = newServings / originalServings;
+
+    document.querySelectorAll('.qty-val-plain').forEach(field => {
         const base = parseFloat(field.getAttribute('data-base'));
         if (!isNaN(base)) {
-            let result = base * newServings;
-            // Rounded to 2 decimals and using comma for display
+            let result = base * ratio;
+            // Formatierung: 2 Dezimalstellen, Komma statt Punkt
             field.innerText = Number(result.toFixed(2)).toString().replace('.', ',');
         }
     });

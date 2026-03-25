@@ -2,7 +2,7 @@
 server {
     listen 80;
     server_name spieltisch.local;
-
+    client_max_body_size 10M;  # up to 10 Megabyte
     # Die Schaltzentrale (Landing Page)
     location / {
 	proxy_pass http://127.0.0.1:8080/; 
