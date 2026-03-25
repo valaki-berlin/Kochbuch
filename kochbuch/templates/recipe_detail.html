@@ -2,6 +2,12 @@
 {% block content %}
 
 <div class="recipe-card">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{{ url_for('kochbuch.index') }}" class="btn">
+            ← {{ t('back_to_db') }}
+        </a>
+    </div>
+
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
         <h1 style="margin: 0;">{{ recipe.title }}</h1>
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
@@ -24,7 +30,6 @@
             <label><strong>{{ t('servings_label') }}:</strong></label>
             <input type="number" id="servings-calculator" class="calculator-input" 
                    value="{{ recipe.servings }}" oninput="calculateMengen()">
-            <span class="calculator-hint">(Adjust for temporary calculation)</span>
         </div>
 
         {% if recipe.is_tested %}

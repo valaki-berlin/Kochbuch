@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{{ t('title') }}{% endblock %}</title>
     <style>
         :root {
-	/* Retro Terminal Palette: Amber on Black */
-	--bg-color: #1c1f22;          /* Soft Charcoal */
-        --panel-color: #2d3135;       /* Lighter Grey for cards */
-        --text-color: #e6e6e6;        /* Off-white for readability */
-        --accent-color: #ffb000;      /* Amber for primary actions */
-        --secondary-amber: #cc8e00;   /* Muted Amber */
-        --border-color: #3e444a;      /* Subtle borders */
-        --input-bg: #0d1117;          /* Dark contrast for inputs */
+            /* Retro Terminal Palette */
+            --bg-color: #1c1f22;          /* Soft Charcoal */
+            --panel-color: #2d3135;       /* Lighter Grey for cards */
+            --text-color: #e6e6e6;        /* Off-white */
+            --accent-color: #ffb000;      /* Amber */
+            --secondary-amber: #cc8e00;   /* Muted Amber */
+            --border-color: #3e444a;      /* Subtle borders */
+            --input-bg: #fdfdfd;          /* Bright white for editing */
+            --input-text: #1a1a1a;        /* Dark text for inputs */
         }
 
         body {
@@ -38,71 +39,34 @@
         }
 
         h1 { color: var(--accent-color); margin-top: 0; }
+        h3 { color: var(--accent-color); }
+        a { color: var(--accent-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        input[type="search"], input[type="text"], textarea {
-            background-color: var(--panel-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 0.5rem;
-            border-radius: 6px;
+        /* --- Global Form Elements --- */
+        input, textarea, select {
+            background-color: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 4px;
+            padding: 8px;
+            font-family: inherit;
+            box-sizing: border-box;
             width: 100%;
-            max-width: 400px;
         }
-.search-section {
-    background-color: var(--panel-color);
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    margin-bottom: 2rem;
-}
 
-.search-grid {
-    display: grid;
-    grid-template-columns: 120px 1fr; /* Festgelegte Breite für Labels */
-    gap: 15px;
-    align-items: center;
-}
-
-.search-grid label {
-    color: var(--accent-color);
-    font-weight: bold;
-}
-
-.search-grid input {
-    background-color: var(--input-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 8px;
-    border-radius: 4px;
-    width: 100%;
-}
-
-.search-row-last {
-    display: flex;
-    gap: 15px;
-}
-
-.search-row-last input {
-    flex-grow: 1; /* Input nimmt den restlichen Platz ein */
-}
-
-/* Der Suchbutton (wir nutzen den btn-delete Style für Vollfarbe) */
-.search-row-last button {
-    white-space: nowrap;
-    min-width: 100px;
-}
-
+        /* --- Buttons --- */
         button, .btn {
-            background-color: var(--button-bg);
+            background-color: var(--panel-color);
             border: 1px solid var(--border-color);
             color: var(--accent-color);
             padding: 0.5rem 1rem;
             cursor: pointer;
             border-radius: 6px;
-            text-decoration: none;
+            transition: 0.2s;
             display: inline-block;
             font-size: 0.9rem;
-            transition: 0.2s;
+            text-align: center;
         }
 
         button:hover, .btn:hover {
@@ -110,56 +74,39 @@
             border-color: #8b949e;
         }
 
-	.btn-delete {
-	    display: inline-block;
-	    padding: 8px 16px;
-	    border-radius: 4px;
-	    border: 1px solid var(--accent-color);
-	    font-size: 14px;
-	    font-weight: bold;
-	    cursor: pointer;
-	    transition: all 0.2s ease;
-
-	    background-color: var(--accent-color);
-	    color: var(--bg-color); 
-	}
-
-	.btn-delete:hover {
-	    background-color: var(--secondary-amber);
-	    border-color: var(--secondary-amber);
-	}
-
-        .recipe-card {
-            background-color: var(--panel-color);
-            border: 1px solid var(--border-color);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-	    transition: all 0.3s ease; /* Weicher Übergang */
-	   xposition: relative;
-  	    overflow: hidden;
+        .btn-delete, .btn-save-large {
+            background-color: var(--accent-color);
+            color: var(--bg-color); 
+            font-weight: bold;
+            border: none;
         }
 
-	.recipe-card:hover {
-	    border-color: var(--accent-color); /* Rahmen leuchtet auf */
-	    box-shadow: 0 0 15px rgba(255, 176, 0, 0.15); /* Subtiles Amber-Glühen */
-	    transform: translateY(-2px); /* Karte hebt sich leicht an */
-	}
+        .btn-delete:hover, .btn-save-large:hover {
+            background-color: var(--secondary-amber);
+        }
 
-	.recipe-card::after {
-	    content: "";
-	    position: absolute;
-	    top: 0; left: 0; right: 0; bottom: 0;
-	    background: linear-gradient(
-	        rgba(18, 16, 16, 0) 50%, 
-	        rgba(0, 0, 0, 0.05) 50%
-	    );
-	    background-size: 100% 4px;
-	    z-index: 1;
-	    pointer-events: none; /* Klicks gehen durch den Effekt durch */
-	}
+        /* --- Search Section (Index) --- */
+        .search-section {
+            background-color: var(--panel-color);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
 
+        .search-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 15px;
+            align-items: center;
+        }
 
+        .search-row-last {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* --- Recipe Cards (Index/List) --- */
         .recipe-card-link {
             text-decoration: none;
             color: inherit;
@@ -168,384 +115,169 @@
         .recipe-card-index {
             background-color: var(--panel-color);
             border: 1px solid var(--border-color);
-            padding: 1.5rem;
+            padding: 1rem;
             border-radius: 8px;
-            display: flex; /* Flexbox für Nebeneinander */
-            justify-content: space-between;
+            display: flex;
             align-items: center;
             gap: 1.5rem;
             transition: all 0.3s ease;
         }
 
-        /* Der Hover-Effekt (falls noch nicht global definiert) */
         .recipe-card-index:hover {
             border-color: var(--accent-color);
             transform: translateY(-2px);
             box-shadow: 0 0 15px rgba(255, 176, 0, 0.15);
         }
 
-        .recipe-text {
-            flex-grow: 1; /* Text nimmt den restlichen Platz ein */
-        }
-
-        .recipe-image-container {
-            width: 100px; /* Feste Größe für das Thumbnail */
-            height: 100px;
-            flex-shrink: 0; /* Verhindert, dass das Bild gestaucht wird */
-        }
-
-        .recipe-thumbnail {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Bild füllt den Container aus, wird beschnitten */
+        .recipe-thumbnail-index {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
             border-radius: 6px;
+            flex-shrink: 0;
             border: 1px solid var(--border-color);
         }
 
+        .recipe-card-text-block {
+            flex-grow: 1;
+        }
 
+        .title-status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .detail-image-container {width: 100%;
-    max-width: 600px;         /* Maximale Breite auf großen Monitoren */
-    aspect-ratio: 3 / 2;     /* Festes Seitenverhältnis */
-    margin: 1.5rem 0 2rem 0;
-        overflow: hidden;
-        border-radius: 8px;
-        border: 1px solid var(--border-color);
-        margin-bottom: 2rem;
-    }
+        .status-icon-tested {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
 
-    .detail-image {
-        width: 100%;
-        height: auto;
-        display: block;
-        object-fit: cover; /* Bild füllt den Container aus */
-	object-position: center;  
-    }
+        /* --- Detail View --- */
+        .recipe-card {
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 8px;
+        }
 
-/* Layout helpers for forms */
-.form-actions {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 30px;
-}
+        .detail-image-container {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 3 / 2;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0 2rem 0;
+        }
 
-.ing-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-}
+        .detail-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.ing-table th {
-    text-align: left;
-    padding-bottom: 10px;
-    color: var(--accent-color); /* Nutzt deine Projekt-Variable */
-    border: none;
-}
+        .calculator-container {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #2a2a2a;
+            padding: 12px 20px;
+            border-radius: 6px;
+            border: 1px solid #444;
+        }
 
-.ing-table td {
-    padding: 5px 0;
-    border: none;
-}
+        .calculator-input {
+            width: 70px;
+            background: #333 !important;
+            color: white !important;
+            text-align: center;
+        }
 
-.btn-add {
-    background-color: var(--secondary-amber);
-    color: #000;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
+        /* --- Recipe Editor (Form) --- */
+        .recipe-edit-header-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 12px;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
 
-.btn-save-large {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    cursor: pointer;
-}
+        .servings-tested-row {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
 
-.btn-remove {
-    color: #ff4444;
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
+        .recipe-content-split-grid {
+            display: grid; 
+            grid-template-columns: 50% 50%; 
+            gap: 30px; 
+            margin-bottom: 2rem; 
+            width: 100%; 
+        }
 
-/* Grid for the header section (Title, Description, Category, Image) */
-.recipe-edit-header-grid {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 12px;
-    margin-bottom: 2rem;
-    align-items: center;
-}
+        .ingredient-edit-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
 
-.recipe-edit-header-grid label {
-    font-weight: bold;
-}
+        .ingredient-edit-row input {
+            text-align: right;
+            padding-right: 8px;
+        }
 
-/* Specific class for inputs within the grid to ensure uniform alignment */
-.grid-input {
-    height: auto !important;
-    margin: 0 !important;
-}
+        .full-width-textarea {
+            width: 100%; 
+            min-height: 400px; 
+            line-height: 1.5;
+        }
 
-/* Row for servings, indented to match the grid's vertical line */
-.servings-row {
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding-left: 200px;
-}
-/* Styling for the is_tested checkbox row */
-.servings-tested-row {
-    display: flex;
-    align-items: center; /* Vertical center alignment */
-    gap: 20px; /* Space between servings input and tested checkbox */
-    margin-bottom: 1.5rem;
-}
+        .tested-checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
 
-.tested-checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Space between the checkbox and its label text */
-    cursor: pointer; /* Change cursor to pointer over the label as well */
-}
+        .tested-checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-color);
+        }
 
-/* Customize the checkbox appearance (optional, standard amber accent) */
-.tested-checkbox-container input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: #ff9f43; /* Amber color to match other buttons */
-}
-/* Main content layout (Ingredients vs. Instructions) */
-.recipe-content-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-}
+        .ingredient-action-container {
+            text-align: right;
+            margin-top: 10px;
+        }
 
-/* Container for the 40/60 split, ensuring full width usage */
-.recipe-content-split-grid {
-    display: grid; 
-    grid-template-columns: 50% 50%; 
-    gap: 30px; 
-    margin-bottom: 2rem; 
-    width: 100%; 
-    box-sizing: border-box;
-}
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            border-top: 1px solid #444;
+            padding-top: 2rem;
+        }
 
-/* Ensure textareas in the grid take up all available horizontal space */
-.full-width-textarea {
-    width: 100%; 
-    min-height: 300px; 
-    line-height: 1.5; 
-    font-family: inherit; 
-    margin: 0; 
-    box-sizing: border-box;
-}
+        .qty-val {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
 
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-/* Styling for the dynamic ingredient addition button */
-.btn-add-ingredient {
-    background-color: #ff9f43; /* Amber color matching the save button */
-    color: #1a1a1a; /* Dark text for contrast */
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 1.2em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-top: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-}
-
-.btn-add-ingredient:hover {
-    background-color: #ffaf63; /* Lighter amber on hover */
-}
-
-/* Container to align the add button to the right */
-.ingredient-action-container {
-    text-align: right;
-    margin-bottom: 1rem;
-}
-/* Align text to the right for all inputs within an ingredient row */
-.ingredient-edit-row input {
-    text-align: right;
-}
-
-/* Optional: Add a small padding to the right so text doesn't touch the border */
-.ingredient-edit-row input {
-    padding-right: 8px;
-    box-sizing: border-box;
-}
-
-/* Footer area containing action buttons */
-.form-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    border-top: 1px solid #444;
-    padding-top: 2rem;
-}
-
-
-/* Light inputs for better readability */
-input, textarea, select {
-    background-color: #fdfdfd !important;
-    color: #1a1a1a !important;
-    border: 1px solid #ccc !important;
-    border-radius: 4px;
-    padding: 8px;
-    font-family: inherit;
-    box-sizing: border-box; /* Crucial for width/padding matching */
-}
-
-/* Header Grid: Label | Wide Input | Right Label | Right Input */
-/* Adjusted min-widths for numerical inputs on the right */
-.header-grid {
-    display: grid;
-    grid-template-columns: 100px 5fr 100px 5fr  100px;
-    gap: 12px 12px;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.header-grid label {
-    font-weight: bold;
-    color: var(--accent-color);
-}
-
-/* Ingredients Table Styling */
-.ing-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 5px;
-}
-
-.ing-table th {
-    text-align: left;
-    color: var(--accent-color);
-    padding-bottom: 8px;
-}
-
-/* Set specific widths for Amount/Unit columns to force gap with Ingredient */
-.ing-table .col-amount {
-    width: 15%;
-}
-
-.ing-table .col-unit {
-    width: 20%;
-    padding-right: 25px; /* Creates the gap towards Ingredient field */
-}
-
-.ing-table input {
-    width: 100%;
-}
-
-/* Restrict Instructions/Notes to line up with the Unit column */
-/* They take the same combined percentage as Amount + Unit */
-textarea[name="instructions"],
-textarea[name="notes"] {
-    width: 70%; /* Total of .col-amount + .col-unit */
-    min-width: 350px; /* Optional min-width for usability */
-    display: block; /* Ensure they are block elements */
-}
-/* Ensure the instruction textarea provides enough space for long recipes */
-textarea[name="steps_text"] {
-    min-height: 350px;
-    line-height: 1.5;
-    font-family: inherit;
-}
-.btn-remove {
-    color: #ff4444;
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-/* Calculator Box Styling */
-.calculator-container {
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: #2a2a2a; /* Darker background to match theme */
-    padding: 12px 20px;
-    border-radius: 6px;
-    border: 1px solid #444;
-}
-
-.calculator-input {
-    width: 70px;
-    padding: 6px;
-    background: #333;
-    color: white;
-    border: 1px solid #555;
-    border-radius: 4px;
-    outline: none;
-}
-
-.calculator-hint {
-    color: #888;
-    font-size: 0.9em;
-}
-
-/* Notes & Save Area */
-.notes-flex-container {
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-}
-
-.notes-textarea {
-    flex-grow: 1;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    background: #333;
-    color: white;
-    border: 1px solid #555;
-    border-radius: 4px;
-    resize: vertical;
-}
-
-/* Ingredient List highlighting */
-.qty-val {
-    color: var(--accent-color, #ff9f43); /* Use your accent color for the numbers */
-}
-
-
-        a { color: var(--accent-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
-        hr { border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0; }
     </style>
 </head>
 <body>
     <header>
         <nav>
             <ul>
-		<li><a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('btn_kochbuch') }}</a></li>
+                <li><a href="{{ url_for('kochbuch.index') }}" class="btn">{{ t('btn_kochbuch') }}</a></li>
             </ul>
         </nav>
         <h1>{% block header_title %}{{ t('title') }}{% endblock %}</h1>
-        <p><i>{{ t('welcome') }}</i></p>
     </header>
 
     <main>
@@ -557,32 +289,25 @@ textarea[name="steps_text"] {
         <p><small>Terminal access: Raspberry Pi 2 | SQLite 3 | Lab Status: Online</small></p>
     </footer>
 
-<script>
-/**
- * Dynamically adds a new ingredient input row to the form.
- * Uses the translations provided globally by Flask.
- */
-function addIngredientRow() {
-    const container = document.getElementById('ingredient-rows');
-    const firstRow = container.querySelector('.ingredient-edit-row');
-    
-    if (firstRow) {
-        // Clone the first row to maintain styles and structure
-        const newRow = firstRow.cloneNode(true);
-        
-        // Clear all input values in the new row
-        newRow.querySelectorAll('input').forEach(input => {
-            input.value = '';
-        });
-        
-        // Append the new row to the container
-        container.appendChild(newRow);
-    } else {
-        // Fallback if no rows exist (should not happen with initial setup)
-        console.error("Could not find base ingredient row to clone.");
-    }
-}
-</script>
-
+    <script>
+        /**
+         * Adds a new ingredient row by cloning the last existing row.
+         */
+        function addIngredientRow() {
+            const container = document.getElementById('ingredient-rows');
+            const rows = container.querySelectorAll('.ingredient-edit-row');
+            if (rows.length > 0) {
+                const lastRow = rows[rows.length - 1];
+                const newRow = lastRow.cloneNode(true);
+                
+                // Clear inputs but keep data-list links
+                newRow.querySelectorAll('input').forEach(input => {
+                    input.value = '';
+                });
+                
+                container.appendChild(newRow);
+            }
+        }
+    </script>
 </body>
 </html>

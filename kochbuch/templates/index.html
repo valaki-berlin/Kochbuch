@@ -37,24 +37,29 @@
 			<a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}" class="recipe-card-link">
                         <div class="recipe-card-index">
                             
-                            <div class="recipe-text">
-                                <h3 style="margin: 0 0 0.5rem 0; color: var(--accent-color);">{{ recipe.title }}</h3>
+                            <div class="recipe-image-container-index">
+                                {% if recipe.image_url %}
+                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="recipe-thumbnail-index">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Image" class="recipe-thumbnail-index">
+                                {% endif %}
+                            </div>
+                            
+                            <div class="recipe-card-text-block">
+                                <div class="title-status-container">
+                                    <h3 style="margin: 0; color: var(--accent-color);">{{ recipe.title }}</h3>
+                                    {% if recipe.is_tested %}
+                                        <span class="status-icon-tested" title="{{ t('tested_label') }}">✓</span>
+                                    {% endif %}
+                                </div>
                                 {% if recipe.category %}
                                     <small style="color: var(--secondary-amber);">{{ recipe.category }}</small>
                                 {% endif %}
                             </div>
                             
-                            <div class="recipe-image-container">
-                                {% if recipe.image_url %}
-                                    <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="recipe-thumbnail">
-                                {% else %}
-                                    <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Image" class="recipe-thumbnail">
-                                {% endif %}
-                            </div>
-                            
                         </div>
-
-                {% endfor %}
+                    </a> 
+		    {% endfor %}
             </div>
         {% else %}
             <div class="recipe-card">
