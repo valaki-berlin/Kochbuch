@@ -5,49 +5,26 @@
     <title>{% block title %}{{ t('title') }}{% endblock %}</title>
     <style>
         :root {
-            /* --- Farbschema (Retro Terminal) --- */
+            /* Retro Terminal Palette */
             --bg-color: #1c1f22;          /* Soft Charcoal */
             --panel-color: #2d3135;       /* Lighter Grey for cards */
             --text-color: #e6e6e6;        /* Off-white */
-            --accent-color: #ffc107;      /* Helleres Amber (#ffc107 statt #ffb000) */
+            --accent-color: #ffb000;      /* Amber */
             --secondary-amber: #cc8e00;   /* Muted Amber */
             --border-color: #3e444a;      /* Subtle borders */
-            --input-bg: #ffd54f;          /* Bright yellow for editing */
+            --input-bg: #ffb000;          /* Bright white for editing */
             --input-text: #1a1a1a;        /* Dark text for inputs */
-
-            /* --- Schriftgrößen & Abstände (Global steuerbar) --- */
-            --base-font-size: 16px;       /* Basis für das Dokument */
-            --recipe-font-size: 1.2rem;  /* Größe für Zutaten & Anleitung */
-            --recipe-line-height: 1.7;    /* Zeilenabstand für bessere Lesbarkeit */
-            --header-font-size: 1.8rem;   /* Größe der Überschriften */
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: var(--base-font-size);
             margin: 0;
             padding: 2rem;
             line-height: 1.6;
         }
 
-        /* --- Gezielte Steuerung für Rezept-Details --- */
-        
-        /* Zutaten-Tabelle */
-        #ingredients-section table td {
-            font-size: var(--recipe-font-size);
-            line-height: var(--recipe-line-height);
-        }
-
-        /* Zubereitungsschritte */
-        #instructions-section p, 
-        #instructions-section span {
-            font-size: var(--recipe-font-size);
-            line-height: var(--recipe-line-height);
-        }
-
-        /* --- Header & Navigation --- */
         header {
             border-bottom: 2px solid var(--border-color);
             margin-bottom: 2rem;
@@ -61,12 +38,12 @@
             gap: 1rem;
         }
 
-        h1 { color: var(--accent-color); font-size: var(--header-font-size); margin-top: 0; }
-        h3 { color: var(--accent-color); margin-bottom: 1rem; }
+        h1 { color: var(--accent-color); margin-top: 0; }
+        h3 { color: var(--accent-color); }
         a { color: var(--accent-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* --- Formular Elemente --- */
+        /* --- Global Form Elements --- */
         input, textarea, select {
             background-color: var(--input-bg) !important;
             color: var(--input-text) !important;
@@ -108,7 +85,76 @@
             background-color: var(--secondary-amber);
         }
 
-        /* --- Layout Hilfen --- */
+        /* --- Search Section (Index) --- */
+        .search-section {
+            background-color: var(--panel-color);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-row-last {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* --- Recipe Cards (Index/List) --- */
+        .recipe-card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .recipe-card-index {
+            background-color: var(--panel-color);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-card-index:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 176, 0, 0.15);
+        }
+
+        .recipe-thumbnail-index {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .recipe-card-text-block {
+            flex-grow: 1;
+        }
+
+        .title-status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-icon-tested {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* --- Detail View --- */
         .recipe-card {
             background-color: var(--panel-color);
             border: 1px solid var(--border-color);
@@ -116,14 +162,6 @@
             border-radius: 8px;
         }
 
-        .recipe-content-split-grid {
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 40px; 
-            margin-bottom: 2rem; 
-        }
-
-        /* Bilder-Container */
         .detail-image-container {
             width: 100%;
             max-width: 600px;
@@ -140,10 +178,94 @@
             object-fit: cover;
         }
 
-        /* Spezielle Text-Klassen */
-        .qty-val-plain {
-            /* Früher Amber, jetzt Standardfarbe aus Variablen */
-            color: var(--text-color);
+        .calculator-container {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #2a2a2a;
+            padding: 12px 20px;
+            border-radius: 6px;
+            border: 1px solid #444;
+        }
+
+        .calculator-input {
+            width: 70px;
+            background: #333 !important;
+            color: white !important;
+            text-align: center;
+        }
+
+        /* --- Recipe Editor (Form) --- */
+        .recipe-edit-header-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 12px;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .servings-tested-row {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+
+        .recipe-content-split-grid {
+            display: grid; 
+            grid-template-columns: 50% 50%; 
+            gap: 30px; 
+            margin-bottom: 2rem; 
+            width: 100%; 
+        }
+
+        .ingredient-edit-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .ingredient-edit-row input {
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .full-width-textarea {
+            width: 100%; 
+            min-height: 400px; 
+            line-height: 1.5;
+        }
+
+        .tested-checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .tested-checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-color);
+        }
+
+        .ingredient-action-container {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            border-top: 1px solid #444;
+            padding-top: 2rem;
+        }
+
+        .qty-val {
+            color: var(--accent-color);
+            font-weight: bold;
         }
 
     </style>
@@ -163,13 +285,13 @@
     </main>
 
     <footer>
-        <hr style="border-color: var(--border-color); opacity: 0.3;">
-        <p><small>Terminal access: Raspberry Pi | SQLite 3 | Lab Status: Online</small></p>
+        <hr>
+        <p><small>Terminal access: Raspberry Pi 2 | SQLite 3 | Lab Status: Online</small></p>
     </footer>
 
     <script>
         /**
-         * Fügt eine neue Zutatenzeile im Editor hinzu
+         * Adds a new ingredient row by cloning the last existing row.
          */
         function addIngredientRow() {
             const container = document.getElementById('ingredient-rows');
@@ -177,9 +299,12 @@
             if (rows.length > 0) {
                 const lastRow = rows[rows.length - 1];
                 const newRow = lastRow.cloneNode(true);
+                
+                // Clear inputs but keep data-list links
                 newRow.querySelectorAll('input').forEach(input => {
                     input.value = '';
                 });
+                
                 container.appendChild(newRow);
             }
         }
