@@ -142,4 +142,4 @@ if __name__ == "__main__":
         target_xml = sys.argv[1]
         rint(f"DEBUG: Attempting to import '{target_xml}'") 
         # Default database path for CLI execution
-        import_xml_to_db(target_xml, 'rezepte/RezeptDB.db')
+        import_xml_to_db(target_xml, 'db/RezeptDB.db')

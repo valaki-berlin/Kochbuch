@@ -15,14 +15,14 @@ def delete_recipe(id):
     return redirect(url_for('kochbuch.index'))
 
 def update_fast(id):
-    """ Saves servings and annotations directly from the detail view """
+    """ Saves annotations directly from the detail view """
     if request.method == 'POST':
         db = get_db()
-        servings = request.form.get('servings')
+        # servings = request.form.get('servings')
         notes = request.form.get('notes') # Form field 'notes' -> DB column 'annotations'
         
-        db.execute("UPDATE recipe SET servings = ?, annotations = ? WHERE recipe_id = ?", 
-                   (servings, notes, id))
+        db.execute("UPDATE recipe SET annotations = ? WHERE recipe_id = ?", 
+                   (notes, id))
         db.commit()
     return redirect(url_for('kochbuch.show_details', id=id))
 

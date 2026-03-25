@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="recipe-card">
+    <h1>{{ t('edit_button_text') }}: {{ recipe.title }}</h1>
+
+    <form action="{{ url_for('kochbuch.save_changes', id=recipe.recipe_id) }}" method="POST">
+        
+        <div style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label><strong>Title:</strong></label>
+                <input type="text" name="title" value="{{ recipe.title }}" class="notes-textarea" style="height: auto;">
+            </div>
+            
+            <div>
+                <label><strong>Description:</strong></label>
+                <textarea name="description" rows="3" class="notes-textarea">{{ recipe.description }}</textarea>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label><strong>{{ t('servings_label') }}:</strong></label>
+                <input type="number" name="servings" value="{{ recipe.servings }}" class="calculator-input">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 2rem;">
+            <div>
+                <h3>{{ t('ingredients_title') }}</h3>
+                <div id="ingredient-rows">
+                    {% for ing in ingredients %}
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
+                        <input type="text" name="qty" value="{{ ing.quantity }}" style="width: 50px;" class="calculator-input">
+                        <input type="text" name="unit" value="{{ ing.unit_name }}" style="width: 70px;" class="calculator-input">
+                        <input type="text" name="ing_name" value="{{ ing.ing_name }}" style="flex-grow: 1;" class="calculator-input">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div>
+                <h3>{{ t('instructions_title') }}</h3>
+                {% for step in steps %}
+                <div style="margin-bottom: 1rem;">
+                    <label>Step {{ step.step_no }}</label>
+                    <textarea name="step_text" rows="3" class="notes-textarea">{{ step.instruction }}</textarea>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; border-top: 1px solid #444; padding-top: 2rem;">
+            <a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}" class="btn">Cancel</a>
+            <button type="submit" class="btn-save-large">Save All Changes</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

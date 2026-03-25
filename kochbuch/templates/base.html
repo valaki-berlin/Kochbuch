@@ -348,6 +348,57 @@ textarea[name="notes"] {
     cursor: pointer;
 }
 
+/* Calculator Box Styling */
+.calculator-container {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #2a2a2a; /* Darker background to match theme */
+    padding: 12px 20px;
+    border-radius: 6px;
+    border: 1px solid #444;
+}
+
+.calculator-input {
+    width: 70px;
+    padding: 6px;
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 4px;
+    outline: none;
+}
+
+.calculator-hint {
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* Notes & Save Area */
+.notes-flex-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.notes-textarea {
+    flex-grow: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+/* Ingredient List highlighting */
+.qty-val {
+    color: var(--accent-color, #ff9f43); /* Use your accent color for the numbers */
+}
+
 
         a { color: var(--accent-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
