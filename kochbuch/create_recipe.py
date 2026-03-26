@@ -1,16 +1,25 @@
 # coding: utf-8
 # create_recipe.py - Logic for adding new recipes
 
+import re  
 from flask import render_template, request, redirect, url_for, flash
 from database import get_db
 
 def normalize_german_text(text):
-    """ Normalize German umlauts for searchability. """
-    if not text: return ""
-    res = text.lower()
-    res = res.replace(u'ä', 'ae').replace(u'ö', 'oe').replace(u'ü', 'ue').replace(u'ß', 'ss')
-    res = res.replace(' ', '-')
-    return res
+    """ 
+    Standardized normalization: lowercase, replaces umlauts, 
+    removes special chars, and collapses all whitespace/dashes into a single dash.
+    """
+    if not title: return ""
+    # 1. Lowercase and strip whitespace
+    res = title.lower().strip()
+    # 2. Replace German umlauts
+    res = res.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss').replace('&', 'und')
+    # 3. Remove everything except alphanumeric, spaces, and dashes
+    res = re.sub(r'[^a-z0-9\s-]', '', res)
+    # 4. Replace one or more spaces/dashes with a single dash
+    res = re.sub(r'[\s-]+', '-', res)
+    return res.strip('-')
 
 def show_form():
     if request.method == 'POST':
@@ -40,13 +49,30 @@ def show_form():
             recipe_id = cursor.lastrowid
 
             # 3. Process Categories (Splitting by COMMA as requested)
-            # We strip whitespace from each category name
-            cat_list = [c.strip() for c in categories_raw.split(',') if c.strip()]
+            # --- Section 3 in create_recipe.py ---
+
+            # Get the raw string from the form
+            categories_raw = request.form.get('category', '')
+
+            # Use a regular expression to split by comma OR any whitespace (space, tab, newline)
+            # The pattern r'[,\s]+' matches one or more commas or spaces
+            cat_names = re.split(r'[,\s]+', categories_raw)
+
+            # Clean the list: strip extra whitespace and ignore empty strings
+            cat_list = [c.strip() for c in cat_names if c.strip()]
+
             for cat_name in cat_list:
-                db.execute("INSERT OR IGNORE INTO category (name) VALUES (?)", (cat_name,)) #
+                # Insert the individual category into the master 'category' table
+                db.execute("INSERT OR IGNORE INTO category (name) VALUES (?)", (cat_name,))
+    
+                # Get the ID for the clean, single category name
                 cat_res = db.execute("SELECT category_id FROM category WHERE name = ?", (cat_name,)).fetchone()
-                db.execute("INSERT OR IGNORE INTO recipe_category (recipe_id, category_id) VALUES (?, ?)", 
-                           (recipe_id, cat_res[0])) #
+    
+                # Link the recipe to this specific category ID
+                if cat_res:
+                    db.execute("INSERT OR IGNORE INTO recipe_category (recipe_id, category_id) VALUES (?, ?)", 
+                               (recipe_id, cat_res[0]))
+
 
             # 4. Process Instructions (Splitting by empty lines)
             # Use .replace('\r\n', '\n') to handle different OS line endings before splitting

@@ -115,7 +115,6 @@ def do_import():
             flash(f'Error during import: {str(e)}', 'danger')
         finally:
             # Clean up: remove the temporary file after processing
-            print("after check fn!!!", flush=True)
             if os.path.exists(filepath):
                 os.remove(filepath)
                 

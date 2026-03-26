@@ -39,8 +39,6 @@
                         Aktuell: {{ image_url }} 
                         <span style="color: var(--text-color); opacity: 0.6;">(Wird bei neuem Upload ersetzt)</span>
                     </small>
-                {% else %}
-                    <small style="color: var(--text-color); opacity: 0.5;">Kein Bild verknüpft (Standardbild wird genutzt)</small>
                 {% endif %}
             </div>
         </div>
@@ -90,9 +88,6 @@
 
             <div>
                 <h3>{{ t('instructions_title') }}</h3>
-                <p style="font-size: 0.85rem; color: var(--secondary-amber); margin-bottom: 10px;">
-                    Tipp: Leerzeile zwischen den Schritten erzeugt separate Blöcke.
-                </p>
                 <textarea name="steps_text" class="full-width-textarea" 
                           placeholder="Schritt 1...&#10;&#10;Schritt 2...">{{ steps_text }}</textarea>
             </div>
