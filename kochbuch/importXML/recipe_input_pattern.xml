@@ -9,6 +9,7 @@
         <rule>Wenn es keine Masseinheit (unit) gibt oder sie nicht sinnvoll erscheint (wie in "1 Stück Lorbeerblatt"), dann lass die Masseinheit (unit) weg</rule>    
         <rule>Rechne alle Massangaben auf ein Rezept für zwei Personen um.</rule>        
         <rule>Wenn in einer Zutatenangabe Arbeitschritte versteckt sind (wie in "eine Zwiebel, klein geschnitten"), dann nimm in die Zutatenangabe nur "eine Zwiebel" auf und füge am Anfang der instructions einen entsprechenden Arbeitsschritt hinzu</rule>
+        <rule>Fülle Kategorien entweder aus dem Rezept, wenn vorhanden, oder nach grundsätzlichen Kriterien - Region, vegetarisch, Rind, Huhn, Nachspeise, Suppe etc. </rule>        
 
 
     </processing_rules>
@@ -18,12 +19,17 @@
         <description>Kurzbeschreibung</description>
         <ingredients>
             <ingredient amount="ZAHL" unit="EINHEIT/TEXT">Zutat1</ingredient>
-            <ingredient amount="ZAHL" unit="EINHEIT/TEXT">Zutat2</ingredients>
+            <ingredient amount="ZAHL" unit="EINHEIT/TEXT">Zutat2</ingredient>
+        </ingredients>
+        <categories>
+	        <category>"REGION"</category>
+	        <category>"CATEGORY2"</category>
+		</categories>
+
         <instructions>
             <step order="1">Erster Schritt.</step>
             <step order="2">Zweiter Schritt.</step> 
             <step order="2">Et cetera</step> 
-
         </instructions>
         
         <notes>Notizen</notes>

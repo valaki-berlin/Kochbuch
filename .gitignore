@@ -5,7 +5,7 @@
 *.sqlite3
 *.db-journal
 *.db-shm
-*.db-wal:wq
+*.db-wal
 
 
 # Byte-compiled / optimized / DLL files

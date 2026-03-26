@@ -107,7 +107,7 @@ def do_import():
         try:
             # Execute your existing import function
             # Ensure DATABASE variable contains the correct path to your SQLite file
-            print("call import_recipe.import_xml_to_db", flush=True)
+            #xprint("call import_recipe.import_xml_to_db", flush=True)
             import_recipe.import_xml_to_db(filepath, DATABASE)
             flash('Import successful!', 'success')
         except Exception as e:

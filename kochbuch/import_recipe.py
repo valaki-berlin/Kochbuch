@@ -2,15 +2,7 @@ import sqlite3
 import xml.etree.ElementTree as ET
 import sys
 import os
-
-def normalize_title(title):
-    """ Same logic as create_recipe.py to ensure database consistency. """
-    if not title: return ""
-    res = title.lower().strip()
-    res = res.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss').replace('&', 'und')
-    res = re.sub(r'[^a-z0-9\s-]', '', res)
-    res = re.sub(r'[\s-]+', '-', res)
-    return res.strip('-')
+from utils import normalize_title
 
 def get_or_create_id(cursor, table, column, value):
     """Finds an ID or creates a new record if it doesn't exist."""

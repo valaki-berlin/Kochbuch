@@ -5,6 +5,7 @@ import re
 import os
 from PIL import Image
 from werkzeug.utils import secure_filename
+from utils import normalize_title, get_categories_string, save_recipe_categories
 
 # Configuration
 UPLOAD_FOLDER = 'static/recipe_images'
@@ -72,11 +73,8 @@ def manage_recipe(id=None):
         recipe = db.execute("SELECT * FROM recipe WHERE recipe_id = ?", (id,)).fetchone()
         
         if recipe:
-            # Load associated category
-            cat_row = db.execute("""SELECT c.name FROM category c 
-                                    JOIN recipe_category rc ON c.category_id = rc.category_id 
-                                    WHERE rc.recipe_id = ? LIMIT 1""", (id,)).fetchone()
-            category_name = cat_row['name'] if cat_row else ""
+ 	    # Load ALL associated categories
+            category_name = get_categories_string(db, id)
             
             # Load primary image
             img_row = db.execute("SELECT url FROM recipe_image WHERE recipe_id = ? LIMIT 1", (id,)).fetchone()
@@ -132,9 +130,10 @@ def manage_recipe(id=None):
         # B) Handle Category (Delete existing link and create new)
         db.execute("DELETE FROM recipe_category WHERE recipe_id = ?", (rid,))
         if cat_input:
-            db.execute("INSERT OR IGNORE INTO category (name) VALUES (?)", (cat_input,))
-            cid = db.execute("SELECT category_id FROM category WHERE name=?", (cat_input,)).fetchone()[0]
-            db.execute("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?,?)", (rid, cid))
+            save_recipe_categories(db, rid, cat_input)
+            # db.execute("INSERT OR IGNORE INTO category (name) VALUES (?)", (cat_input,))
+            # cid = db.execute("SELECT category_id FROM category WHERE name=?", (cat_input,)).fetchone()[0]
+            # db.execute("INSERT INTO recipe_category (recipe_id, category_id) VALUES (?,?)", (rid, cid))
 
         # C) Handle Image
         # Handle the image upload
