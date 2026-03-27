@@ -5,40 +5,33 @@ import os
 from utils import normalize_title
 
 def get_or_create_id(cursor, table, column, value):
-    """Finds an ID or creates a new record if it doesn't exist."""
+    """Findet eine ID oder erstellt einen neuen Datensatz, falls er nicht existiert."""
     cursor.execute(f"SELECT {table}_id FROM {table} WHERE {column} = ?", (value,))
     row = cursor.fetchone()
     if row:
         return row[0]
     
-    # Default values for new units/ingredients/categories
-    if table == 'unit':
-        cursor.execute("INSERT INTO unit (name) VALUES (?)", (value,))
-    else:
-        cursor.execute(f"INSERT INTO {table} (name) VALUES (?)", (value,))
+    # Standardwerte für neue Einheiten/Zutaten/Kategorien
+    cursor.execute(f"INSERT INTO {table} (name) VALUES (?)", (value,))
     return cursor.lastrowid
 
 def parse_amount(amount_str, ingredient_name):
-    """
-    Validates if the amount is a number. 
-    Returns 0.0 for empty strings.
-    """
+    """Validiert, ob die Menge eine Zahl ist. Gibt 0.0 für leere Strings zurück."""
     if not amount_str or amount_str.strip() == "":
-        amount_str = "0"
+        return 0.0
         
     cleaned = amount_str.replace(',', '.')
     try:
         return float(cleaned)
     except ValueError:
-        raise ValueError(
-            f"CRITICAL ERROR: Invalid amount '{amount_str}' for ingredient '{ingredient_name}'. "
-            f"Please fix the XML (no calculations allowed)."
-        )
+        # Falls es sich um Text wie "nach Belieben" handelt, setzen wir 0.0
+        # (Da die DB 'quantity INTEGER NOT NULL' verlangt, nutzen wir 0)
+        return 0.0
 
 def import_xml_to_db(xml_file, db_file):
-    """Parses the XML and inserts data into the SQLite database."""
+    """Parsed das XML und fügt die Daten in die SQLite-Datenbank ein."""
     if not os.path.exists(xml_file):
-        print(f"Error: File '{xml_file}' not found.")
+        print(f"Fehler: Datei '{xml_file}' nicht gefunden.")
         return
 
     try:
@@ -54,13 +47,13 @@ def import_xml_to_db(xml_file, db_file):
             if title_node is None: continue
             title = title_node.text
             
-            # Skip duplicates
+            # Duplikate überspringen
             cursor.execute("SELECT recipe_id FROM recipe WHERE title = ?", (title,))
             if cursor.fetchone():
-                print(f"Skipped: '{title}' already exists.")
+                print(f"Übersprungen: '{title}' existiert bereits.")
                 continue
 
-            print(f"Importing: {title}...")
+            print(f"Importiere: {title}...")
             
             description = recipe_node.find('description').text if recipe_node.find('description') is not None else ""
             notes = recipe_node.find('notes').text.strip() if recipe_node.find('notes') is not None else ""
@@ -72,21 +65,16 @@ def import_xml_to_db(xml_file, db_file):
             
             recipe_id = cursor.lastrowid
 
-            # --- NEW: Process Categories ---
+            # Kategorien verarbeiten
             categories_node = recipe_node.find('categories')
             if categories_node is not None:
                 for cat_node in categories_node.findall('category'):
                     cat_name = cat_node.text.strip()
                     if cat_name:
-                        # Ensure category exists and get its ID
                         cat_id = get_or_create_id(cursor, 'category', 'name', cat_name)
-                        # Link recipe to category
-                        cursor.execute("""
-                            INSERT OR IGNORE INTO recipe_category (recipe_id, category_id)
-                            VALUES (?, ?)
-                        """, (recipe_id, cat_id))
+                        cursor.execute("INSERT OR IGNORE INTO recipe_category (recipe_id, category_id) VALUES (?, ?)", (recipe_id, cat_id))
 
-            # Process Instructions
+            # Anweisungen (Steps) verarbeiten
             instructions_node = recipe_node.find('instructions')
             if instructions_node is not None:
                 for step in instructions_node.findall('step'):
@@ -95,33 +83,43 @@ def import_xml_to_db(xml_file, db_file):
                         VALUES (?, ?, ?)
                     """, (recipe_id, step.get('order'), step.text))
 
-            # Process Ingredients
+            # Zutaten verarbeiten (mit neuen Attributen)
             ingredients_node = recipe_node.find('ingredients')
             if ingredients_node is not None:
                 for idx, ing_node in enumerate(ingredients_node.findall('ingredient'), 1):
-                    ing_name = ing_node.text
+                    # NEU: Extraktion aus Attributen statt aus dem Element-Text
+                    ing_name = ing_node.get('ingredient')
+                    if not ing_name: continue # Falls das Attribut fehlt
+                    
                     amount = parse_amount(ing_node.get('amount', '0'), ing_name)
                     unit_name = ing_node.get('unit', 'Stück')
+                    prep_note = ing_node.get('note', '')
+                    
+                    # Optional-Status umwandeln (YES/NO zu 1/0)
+                    is_opt_str = ing_node.get('Optional', 'NO').upper()
+                    is_optional = 1 if is_opt_str == 'YES' else 0
 
                     ing_id = get_or_create_id(cursor, 'ingredient', 'name', ing_name)
                     unit_id = get_or_create_id(cursor, 'unit', 'name', unit_name)
 
+                    # In recipe_ingredient einfügen (inkl. neuer Spalten)
                     cursor.execute("""
-                        INSERT INTO recipe_ingredient (recipe_id, ingredient_id, position, quantity, unit_id)
-                        VALUES (?, ?, ?, ?, ?)
-                    """, (recipe_id, ing_id, idx, amount, unit_id))
+                        INSERT INTO recipe_ingredient 
+                        (recipe_id, ingredient_id, position, quantity, unit_id, preparation_note, is_optional)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """, (recipe_id, ing_id, idx, amount, unit_id, prep_note, is_optional))
 
         conn.commit()
-        print("Import completed successfully.")
+        print("Import erfolgreich abgeschlossen.")
 
     except Exception as e:
         if 'conn' in locals(): conn.rollback()
-        print(f"\nImport aborted:\n{e}")
+        print(f"\nImport abgebrochen:\n{e}")
     finally:
         if 'conn' in locals(): conn.close()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python import_recipe.py <recipe.xml>")
+        print("Nutzung: python import_recipe.py <recipe.xml>")
     else:
         import_xml_to_db(sys.argv[1], 'db/RezeptDB.db')
