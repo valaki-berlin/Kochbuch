@@ -51,23 +51,29 @@
         <div id="ingredients-section">
             <h3>{{ t('ingredients_title') }}</h3>
             <table style="border-collapse: collapse; border: none; width: 100%;">
-                <tbody>
-                    {% for ing in ingredients %}
-                    <tr>
-                        <td style="text-align: right; padding: 5px 15px 5px 0; white-space: nowrap; vertical-align: top; width: 120px;">
-                            <span class="qty-val-plain" data-base="{{ ing.quantity }}">
-                                {{ ing.quantity | replace('.', ',') if ing.quantity else '' }}
-                            </span>
-                            <span style="color: var(--text-color); margin-left: 4px;">{{ ing.unit }}</span>
-                        </td>
-                        
-                        <td style="text-align: left; padding: 5px 0; vertical-align: top; color: var(--text-color);">
-                            {{ ing.ing_name if ing.ing_name else ing.name }}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+	   <tbody>
+    {% for ing in ingredients %}
+    <tr>
+        <td style="text-align: right; padding: 5px 15px 5px 0; white-space: nowrap; vertical-align: top; width: 120px;">
+            <span class="qty-val-plain" data-base="{{ ing.quantity }}">
+                {{ (ing.quantity | string).replace('.0', '').replace('.', ',') if ing.quantity else '' }}
+            </span>
+            <span style="color: var(--text-color); margin-left: 4px;">{{ ing.unit or '' }}</span>
+        </td>
+        <td style="text-align: left; padding: 5px 0; vertical-align: top; color: var(--text-color);">
+            <strong>{{ ing.ing_name }}</strong>
+            {% if ing.preparation_note or ing.is_optional %}
+                <span style="font-style: italic; opacity: 0.7; font-size: 0.9em; margin-left: 5px;">
+                    ({% if ing.preparation_note %}{{ ing.preparation_note }}{% endif %}
+                    {%- if ing.preparation_note and ing.is_optional %} - {% endif -%}
+                    {%- if ing.is_optional %}optional{% endif %})
+                </span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody> 
+	</table>
         </div>
 
         <div id="instructions-section">

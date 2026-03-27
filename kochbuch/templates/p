@@ -1,0 +1,62 @@
+--- recipe_form.orig
++++ recipe_form.orig
+@@ -66,13 +66,23 @@
+                     {% if ingredients %}
+                         {% for ing in ingredients %}
+                         <div class="ingredient-edit-row">
+-                            <input type="text" name="ingredient_amount" value="{{ ing.quantity if ing.quantity != 0 else '' }}" 
+-                                   placeholder="Menge" style="width: 60px;">
+-                            <input type="text" name="ingredient_unit" value="{{ ing.unit_name }}" 
+-                                   list="unit_list" oninput="filterDatalist(this, 'unit_list')" 
+-                                   placeholder="Einheit" style="width: 100px;">
+-                            <input type="text" name="ingredient_name" value="{{ ing.ingredient_name }}" 
+-                                   list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" 
++                            <input type="text" name="ingredient_amount" value="{{ ing.quantity if ing.quantity != 0 else '' }}" placeholder="Menge" style="width: 60px;">
++                            <input type="text" name="ingredient_unit" value="{{ ing.unit_name }}" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 100px;">
++                            <input type="text" name="ingredient_name" value="{{ ing.ingredient_name }}" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" 
+                                    placeholder="Zutat" required style="flex-grow: 1;">
++                            <input type="text" name="ingredient_note" value="{{ ing.preparation_note or '' }}" 
++                                   placeholder="Notiz" style="width: 120px;">
++                            <label style="font-size: 0.8rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
++                                <input type="hidden" name="ingredient_optional" value="{{ '1' if ing.is_optional else '0' }}">
++                                <input type="checkbox" {% if ing.is_optional %}checked{% endif %} 
++                                       onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
++                                Opt.
++                            </label>
+                             <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+                         </div>
+                         {% endfor %}
+@@ -81,6 +91,13 @@
+                             <input type="text" name="ingredient_unit" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 100px;">
+                             <input type="text" name="ingredient_name" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
++                            <input type="text" name="ingredient_note" placeholder="Notiz" style="width: 120px;">
++                            <label style="font-size: 0.8rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
++                                <input type="hidden" name="ingredient_optional" value="0">
++                                <input type="checkbox" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
++                                Opt.
++                            </label>
+                             <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+                         </div>
+                     {% endif %}
+@@ -133,13 +150,19 @@
+ function addIngredient() {
+     const container = document.getElementById('ingredient-rows');
+     const row = document.createElement('div');
+-    row.className = 'ingredient-edit-row';
++    row.className = 'ingredient-edit-row';
+     row.innerHTML = `
+         <input type="text" name="ingredient_amount" placeholder="Menge" style="width: 60px;">
+-        <input type="text" name="ingredient_unit" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 100px;">
+-        <input type="text" name="ingredient_name" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
++        <input type="text" name="ingredient_unit" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 100px;">
++        <input type="text" name="ingredient_name" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
++        <input type="text" name="ingredient_note" placeholder="Notiz" style="width: 120px;">
++        <label style="font-size: 0.8rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
++            <input type="hidden" name="ingredient_optional" value="0">
++            <input type="checkbox" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
++            Opt.
++        </label>
+         <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+     `;
+     container.appendChild(row);
+ }

@@ -93,7 +93,9 @@ CREATE TABLE IF NOT EXISTS recipe_ingredient (
     ingredient_id    INTEGER NOT NULL,
     position         INTEGER NOT NULL DEFAULT 1,         -- allows repeated ingredient lines
     quantity         INTEGER NOT NULL,
+    quantity_2       INTEGER ,
     unit_id          INTEGER NOT NULL,
+    is_optional      INTEGER DEFAULT 0;
     preparation_note TEXT,
     PRIMARY KEY (recipe_id, ingredient_id, position),
     FOREIGN KEY (recipe_id)     REFERENCES recipe(recipe_id)         ON DELETE CASCADE,

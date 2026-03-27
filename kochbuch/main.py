@@ -10,7 +10,6 @@ from filter import build_filter_query
 from database import get_db
 
 # Modular imports
-import create_recipe
 import view_recipe
 import edit_recipe
 import import_recipe
@@ -124,15 +123,41 @@ def do_import():
     return redirect(url_for('kochbuch.import_page'))
 
 # Register routes from other modules TO THE BLUEPRINT
-# In main.py die alten Zeilen für show_form und show_edit_form ersetzen:
-kb.add_url_rule('/recipe/new', view_func=edit_recipe.manage_recipe, methods=['GET', 'POST'], endpoint='show_form')
-kb.add_url_rule('/recipe/<int:id>/edit', view_func=edit_recipe.manage_recipe, methods=['GET', 'POST'], endpoint='show_edit_form')
-kb.add_url_rule('/recipe/<int:id>', view_func=view_recipe.show_details, endpoint='show_details')
-kb.add_url_rule('/recipe/<int:id>/delete', view_func=view_recipe.delete_recipe, methods=['POST'], endpoint='delete_recipe')
-kb.add_url_rule('/import', view_func=import_page, methods=['GET'], endpoint='import_page')
-kb.add_url_rule('/do_import', view_func=do_import, methods=['POST'], endpoint='do_import')
-kb.add_url_rule('/recipe/fast_update/<int:id>', view_func=view_recipe.update_fast, methods=['POST'], endpoint='update_fast')
-#kb.add_url_rule('/recipe/<int:id>/save_all', view_func=edit_recipe.save_changes, methods=['POST'], endpoint='save_changes')
+
+kb.add_url_rule('/recipe/new', 
+                view_func=edit_recipe.manage_recipe, 
+                methods=['GET', 'POST'], 
+                endpoint='show_form')
+
+kb.add_url_rule('/recipe/<int:id>/edit', 
+                view_func=edit_recipe.manage_recipe, 
+                methods=['GET', 'POST'], 
+                endpoint='show_edit_form')
+
+# Remaining routes
+kb.add_url_rule('/recipe/<int:id>', 
+                view_func=view_recipe.show_details, 
+                endpoint='show_details')
+
+kb.add_url_rule('/recipe/<int:id>/delete', 
+                view_func=view_recipe.delete_recipe, 
+                methods=['POST'], 
+                endpoint='delete_recipe')
+
+kb.add_url_rule('/import', 
+                view_func=import_page, 
+                methods=['GET'], 
+                endpoint='import_page')
+
+kb.add_url_rule('/do_import', 
+                view_func=do_import, 
+                methods=['POST'], 
+                endpoint='do_import')
+
+kb.add_url_rule('/recipe/fast_update/<int:id>', 
+                view_func=view_recipe.update_fast, 
+                methods=['POST'], 
+                endpoint='update_fast')
 
 # --- App Konfiguration ---
 
