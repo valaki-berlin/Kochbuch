@@ -1,7 +1,9 @@
 # coding: utf-8
 import re
+import os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+from PIL import Image
 
 def handle_image_upload(recipe_id, db, request_files, upload_folder, target_width=600):
     """
