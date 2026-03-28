@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <cookbook>
 	<processing_rules>
-		<rule>Wenn keine numerische Menge vorliegt (z.B. "eine Prise", "nach Belieben"), bleibt 'amount' leer oder 0.</rule>
+		<rule>Wenn keine numerische Menge vorliegt (z.B. "eine Prise", "nach Belieben"), bleibt 'amount' leer.</rule>
 		<rule>Textuelle Mengenangaben gehören ausschließlich in das Attribut 'unit'.</rule>
 		<rule>Wähle für das Attribut 'unit' nach Möglichkeit abgekürzte ISO-Einheiten, aslo kg anstatt Kilogramm.</rule>
+		<rule>FVermeide Sonderzeichen wie 6 und ersetze sie durch passende sprachliche Elemente</rule>
+		<rule>Für 'unit': 'nach Belieben' schreibe als 'n. B.'</rule>
+		<rule>Jedes Keyword darf in <ingredient> nur einmal vorkommen</rule>
+		<rule>Zwischentitel in den Zutaten (Vorteig, Dressing, Sauce etc) werden als ingredient="ZWISCHENTITEL:" - auf jeden Fall mit einem abschliessenden Doppelpunkt mit leerem sonstigen Feldern an der entsprechenden Stelle eingefügt </rule>
+		<rule>Wenn in einem Rezept sowohl Salz als auch Pfeffer ohne konkrete Mengenangaben aufgeführt sind, dann schreibe 'Salz und Pfeffer' als eine gemeiname Zutat.</rule>
 		<rule>Rechne Mengen in anderen Massen (imperial, Tassen etc.) nach Möglichkeit in ISO-Einheiten um.</rule>
 		<rule>In 'amount' dürfen nur ganze Zahlen stehen. Sollten im Urspungsrezept Brüche stehen, wie z.B. 0,5 kg, dann rechne bitte sinnvoll in die nächstkleinere Einheit um.</rule>
-		<rule>Rechne alle Massangaben auf ein Rezept für zwei Personen um.</rule>
+		<rule>Rechne alle Massangaben auf ein Rezept für zwei Personen um. Das gitl NICHT für Kuchen- und Brotrezepte</rule>
 		<rule>KATEGORIE sind Schlagworte, Jahreszeiten, regionale Herkünfte, aber auch grobe Schubladen wie Rind, Schwein, Suppe, Torte, Vegetarisch etc...</rule>
 		<rule>NOTE sind Zusätze zu Zutaten, wie bei "Zwiebel, geschnitten" oder "geschmolzene Butter".Wenn nicht otwendig, dann weglassen.</rule>
 		<rule>OPTIONAL sind Zutaten,bei denen aus dem Rezeot hervorgeht, dass sie auch weggelassen werden dürfen. Wenn nciht anwendbar, dann bitte weglassen.</rule>

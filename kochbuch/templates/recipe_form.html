@@ -63,10 +63,10 @@
 		{% if recipe and recipe.ingredients %}
                         {% for ing in recipe.ingredients %}
                         <div class="ingredient-edit-row" style="display: flex; gap: 8px; margin-bottom: 5px; align-items: center;">
-                            <input type="text" name="ingredient_amount" value="{{ ing.quantity if ing.quantity != 0 else '' }}" placeholder="Menge" style="width: 60px;">
-                            <input type="text" name="ingredient_unit" value="{{ ing.unit_name }}" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 80px;">
-                            <input type="text" name="ingredient_name" value="{{ ing.ingredient_name }}" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
-                            <input type="text" name="ingredient_note" value="{{ ing.preparation_note or '' }}" placeholder="Notiz (z.B. gewürfelt)" style="width: 150px;">
+                            <input type="text" name="ingredient_amount" value="{{ ing.quantity if ing.quantity != 0 else '' }}" placeholder="{{ t('amount_head') }}"" style="width: 60px;">
+                            <input type="text" name="ingredient_unit" value="{{ ing.unit_name }}" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="{{ t('unit_head') }}" style="width: 80px;">
+                            <input type="text" name="ingredient_name" value="{{ ing.ingredient_name }}" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="{{ t('ing_or_title') }}" required style="flex-grow: 1;">
+                            <input type="text" name="ingredient_note" value="{{ ing.preparation_note or '' }}" placeholder="{{ t('notes_title') }}" style="width: 150px;">
                             <label style="font-size: 0.85rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
                                 <input type="hidden" name="ingredient_optional" value="{{ '1' if ing.is_optional else '0' }}">
     <input type="checkbox" {% if ing.is_optional %}checked{% endif %} 

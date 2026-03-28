@@ -38,14 +38,18 @@ def show_details(id):
     # Map ingredients to match the variable names used in recipe_detail.html [cite: 7, 8]
     formatted_ingredients = []
     for ing in recipe_data.get('ingredients', []):
+        name = ing.get('ingredient_name') or ""
+        # Check if the name ends with a colon to mark it as a sub-heading
+        is_header = name.strip().endswith(':')
         formatted_ingredients.append({
             'quantity': ing.get('quantity'),
-            'unit': ing.get('unit_name'),           # Maps unit_name to unit [cite: 6, 7]
-            'ing_name': ing.get('ingredient_name'), # Maps ingredient_name to ing_name [cite: 6, 7]
+            'unit': ing.get('unit_name'),
+            'ing_name': name,
             'preparation_note': ing.get('preparation_note'),
-            'is_optional': ing.get('is_optional')
+            'is_optional': ing.get('is_optional'),
+            'is_header': is_header  # New flag for the template
         })
-
+        
     # Convert steps into a list of dictionaries so 'step.instruction' works in the template [cite: 6, 8]
     formatted_steps = [{'instruction': s} for s in recipe_data.get('steps', [])]
 

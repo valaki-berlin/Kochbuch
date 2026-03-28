@@ -1,0 +1,19 @@
+# /etc/systemd/system/watcher.service
+[Unit]
+Description=File Watcher for Kochbuch
+After=network.target
+
+[Service]
+# Absolute Pfade sind Pflicht
+ExecStart=/bin/bash /home/moebius/Geheimlabor/services/restart_on_change.sh
+User=moebius
+Group=moebius
+# Verzeichnis für Logs automatisch verwalten
+LogsDirectory=kochbuch
+StandardOutput=append:/var/log/kochbuch/watcher.log
+StandardError=inherit
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

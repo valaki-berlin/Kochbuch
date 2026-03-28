@@ -44,6 +44,7 @@ TRANSLATIONS = {
         "amount_head": "Menge",
         "unit_head": "Einheit",
         "ing_head": "Zutat",
+        "ing_or_title":"Zutat oder Zwischentitel:",
         "add_ingredient": "Zutat hinzufügen",
         "delete_row": "Löschen"
 },
@@ -89,6 +90,7 @@ TRANSLATIONS = {
         "amount_head": "Qty",
         "unit_head": "Unit",
         "ing_head": "Ingredient",
+        "ing_or_title":"Ingredient or Subtitle:",
 	"add_ingredient": "Add Ingredient",
         "delete_row": "Delete",
     }
