@@ -50,9 +50,9 @@
 
     <section>
         {% if recipes %}
-            <div style="display: grid; gap: 1rem;">
+            <div class="recipe-grid-extended">
                 {% for recipe in recipes %}
-			<a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}" class="recipe-card-link">
+				<a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}" class="recipe-card-link">
                         <div class="recipe-card-index">
                             
                             <div class="recipe-image-container-index">
@@ -67,7 +67,7 @@
                             
                             <div class="recipe-card-text-block">
                                 <div class="title-status-container">
-                                    <h3 style="margin: 0; color: var(--accent-color);">{{ recipe.title }}</h3>
+                                    <h3>{{ recipe.title }}</h3>
                                     {% if recipe.is_tested %}
                                         <span class="status-icon-tested" title="{{ t('tested_label') }}">✓</span>
                                     {% endif %}

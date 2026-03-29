@@ -203,51 +203,89 @@
         border-color: transparent;
     }
 
-	.recipe-grid-extended {
-        display: grid;
-        /* Forced two-column layout */
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 20px;
-    }
+/* --- Recipe Grid and Cards --- */
+.recipe-grid-extended {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 15px;
+    width: 100%;
+}
 
-    .recipe-card-link {
-        text-decoration: none;
-        color: inherit;
-    }
+.recipe-card-index {
+	display: flex;          /* Aktiviert Flexbox */
+    align-items: center;    /* Zentriert alle Kinder vertikal *//
+    gap: 12px;
+    background-color: var(--panel-color);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+    /* This ensures the card doesn't grow infinitely high */
+    min-height: 90px; 
+}
 
-    /* Re-creating the hover effect from index.html */
-    .recipe-card-index:hover {
-        border-color: var(--accent-color);
-        transform: translateY(-2px);
-        transition: all 0.2s ease;
-	
-	/* --- Title and Status Icon Container --- */
-	.title-status-container {
-		display: flex;
-		flex-direction: row; /* Horizontal alignment */
-		align-items: center; /* Vertically centers the checkmark with the text */
-		justify-content: flex-start; /* Keeps both on the left side */
-		gap: 8px; /* Space between title and checkmark */
-		width: 100%;
-		margin-bottom: 5px;
-	}
-	
-	.title-status-container h3 {
-		margin: 0;
-		display: inline; /* Key change: prevents the header from taking the full width */
-		color: var(--accent-color);
-		font-size: 1.2rem;
-		line-height: 1.2;
-	}
-	
-	.status-icon-tested {
-		display: inline-block;
-		color: var(--accent-color); /* Matches the amber theme */
-		font-weight: bold;
-		font-size: 1.1rem;
-		flex-shrink: 0; /* Prevents the checkmark from being squeezed */
-		vertical-align: middle;
-	}
+.recipe-card-index:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* --- Image Handling --- */
+.recipe-thumbnail-container {
+    flex-shrink: 0; /* Prevents image from being squeezed */
+    width: 80px;
+    height: 80px;
+}
+
+.recipe-thumbnail-index {
+    width: 80px;
+    height: 80px;
+    object-fit: cover; /* Crops image to square without distortion */
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* --- Text and Title Handling --- */
+.recipe-card-text-block {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+	justify-content: center; /* Double insurance for centering text lines */
+    overflow: hidden; /* Prevents text from breaking the box */
+}
+
+.title-status-container {
+	display: flex;
+    align-items: center;
+    display: block; /* Allows inline children to flow like a sentence */
+    margin-bottom: 2px;
+}
+
+.title-status-container h3 {
+    display: inline; /* Crucial: removes the block 'wall' so the tick can follow */
+    margin: 0;
+    padding: 0;
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    line-height: 1.2;
+    text-decoration: none; /* Extra insurance against underlines */
+}
+
+.status-icon-tested {
+    display: inline-block;
+    color: var(--accent-color);
+    margin-left: 6px;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+/* --- Small details like category --- */
+.recipe-card-text-block small {
+    color: var(--secondary-amber);
+    display: block;
+    margin-top: 4px;
+}
+
 	
 	/* --- Ensure hover doesn't change the layout flow --- */
 	.recipe-card-index:hover .title-status-container {

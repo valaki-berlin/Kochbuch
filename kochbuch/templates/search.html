@@ -24,10 +24,7 @@
 
         <div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
             <p style="margin: 0; color: var(--secondary-amber); font-weight: bold;">
-                {# Only show success message if recipes were actually found #}
-                {% if recipes and recipes|length > 0 %}
-                    {{ recipes|length }} {{ t('search_success') }}
-                {% endif %}
+                Conditions for if_tested
             </p>
             <button type="submit" class="btn" style="padding: 10px 30px; font-weight: bold;">
                 {{ t('search_button') }}
@@ -55,7 +52,7 @@
 							
 							<div class="recipe-card-text-block">
 								<div class="title-status-container">
-									<h3 style="margin: 0; color: var(--accent-color);">{{ recipe.title }}</h3>
+									<h3>{{ recipe.title }}</h3>
 									{% if recipe.is_tested %}
 										<span class="status-icon-tested" title="{{ t('tested_label') }}">✓</span>
 									{% endif %}
@@ -73,6 +70,7 @@
 					<p style="margin: 0; text-align: center; color: var(--secondary-amber);">{{ t('no_recipes') }}</p>
 				</div>
 			{% endif %}
+			
 		{% endif %}
 	</div>
 </div>
