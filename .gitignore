@@ -9,6 +9,7 @@
 
 #MacOs
 ._*
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -20,7 +21,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-static/recipe_images/
+static/
 build/
 develop-eggs/
 dist/

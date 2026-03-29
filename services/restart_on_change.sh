@@ -11,7 +11,7 @@ inotifywait -m -r --exclude "db/|static/|uploads|export//" -e modify -e create -
 do
     # Only log if NO timer is currently running (this is the first file)
     if [ ! -f /tmp/restart_timer.pid ]; then
-        echo "$(date) - Triggered by: $FILE" 
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Triggered by: $FILE" 
     fi
     
     # Reset the timer if a new event occurs (standard debounce)
