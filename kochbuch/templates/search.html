@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="recipe-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="margin: 0;">{{ t('extended_earch_button') }}</h1>
+        <a href="{{ url_for('kochbuch.index') }}" class="btn">← {{ t('back_to_db') }}</a>
+    </div>
+
+    <form action="{{ url_for('kochbuch.extended_search') }}" method="get">
+        <h3 style="color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+            {{ t('search_category') }}
+        </h3>
+        
+        <div class="category-grid">
+            {% for cat in categories %}
+            <label class="category-tile">
+                <input type="checkbox" name="category" value="{{ cat.name }}" 
+                       {% if cat.name in selected_categories %}checked{% endif %}>
+                <span class="category-name">{{ cat.name }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 2px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <p style="margin: 0; color: var(--secondary-amber); font-weight: bold;">
+                {# Only show success message if recipes were actually found #}
+                {% if recipes and recipes|length > 0 %}
+                    {{ recipes|length }} {{ t('search_success') }}
+                {% endif %}
+            </p>
+            <button type="submit" class="btn" style="padding: 10px 30px; font-weight: bold;">
+                {{ t('search_button') }}
+            </button>
+        </div>
+    </form>
+	
+	{% if selected_categories %}
+			<hr style="border-color: var(--border-color); margin: 2rem 0;">
+			
+			{% if recipes %}
+				<div class="recipe-grid-extended">
+					{% for recipe in recipes %}
+					<a href="{{ url_for('kochbuch.show_details', id=recipe.recipe_id) }}" class="recipe-card-link">
+						<div class="recipe-card-index">
+							<div class="recipe-thumbnail-container">
+								{% if recipe.image_url %}
+									<img src="{{ url_for('static', filename='recipe_images/' + recipe.image_url) }}" 
+										 alt="{{ recipe.title }}" class="recipe-thumbnail-index">
+								{% else %}
+									<img src="{{ url_for('static', filename='images/default.jpg') }}" 
+										 alt="Default Image" class="recipe-thumbnail-index">
+								{% endif %}
+							</div>
+							
+							<div class="recipe-card-text-block">
+								<div class="title-status-container">
+									<h3 style="margin: 0; color: var(--accent-color);">{{ recipe.title }}</h3>
+									{% if recipe.is_tested %}
+										<span class="status-icon-tested" title="{{ t('tested_label') }}">✓</span>
+									{% endif %}
+								</div>
+								{% if recipe.category %}
+									<small style="color: var(--secondary-amber);">{{ recipe.category }}</small>
+								{% endif %}
+							</div>
+						</div>
+					</a>
+					{% endfor %}
+				</div>
+			{% else %}
+				<div class="recipe-card" style="border: 1px dashed var(--border-color); background: transparent;">
+					<p style="margin: 0; text-align: center; color: var(--secondary-amber);">{{ t('no_recipes') }}</p>
+				</div>
+			{% endif %}
+		{% endif %}
+	</div>
+</div>
+
+<style>
+ {% endblock %}

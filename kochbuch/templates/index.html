@@ -18,6 +18,7 @@
         </form>
     </div>
 
+<!--
     <div style="margin: 2rem 0; display: flex; gap: 15px;">
         <a href="{{ url_for('kochbuch.show_form') }}" class="btn">
             <b>{{ t('create_recipe') }}</b>
@@ -26,6 +27,24 @@
             <b>{{ t('import_recipe') }}</b>
         </a>
     </div>
+-->
+
+<div style="margin: 2rem 0; display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; gap: 15px;">
+        <a href="{{ url_for('kochbuch.show_form') }}" class="btn">
+            <b>{{ t('create_recipe') }}</b>
+        </a>
+        <a href="{{ url_for('kochbuch.import_page') }}" class="btn">
+            <b>{{ t('import_recipe') }}</b>
+        </a>
+    </div>
+
+    <div>
+        <a href="{{ url_for('kochbuch.extended_search') }}" class="btn" style="border-color: var(--secondary-amber);">
+            {{ t('extended_earch_button') }}
+        </a>
+    </div>
+</div>
 
     <hr style="border-color: var(--border-color); margin-bottom: 2rem;">
 

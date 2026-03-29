@@ -81,7 +81,6 @@ def index():
                            recipes=recipes, 
                            t=get_string)
 
-
 def import_page():
     """Renders the upload form for XML import."""
     return render_template('import.html')
@@ -121,7 +120,34 @@ def do_import():
     
     flash('Invalid file format. Please upload an XML file.', 'danger')
     return redirect(url_for('kochbuch.import_page'))
+    
+    
+@kb.route('/search')
+def extended_search():
+    db = get_db()
+    
+    # Get selected categories from the URL (GET parameters)
+    # request.args.getlist allows us to catch multiple 'category' checkboxes
+    selected_categories = request.args.getlist('category')
+    
+    # 1. Always fetch all categories for the grid
+    categories = db.execute("SELECT name FROM category ORDER BY name ASC").fetchall()
+    
+    recipes = []
+    if selected_categories:
+        # 2. Use your existing filter logic
+        # We join the categories with a space or comma so build_filter_query can handle it
+        cat_filter_str = " ".join(selected_categories)
+        
+        # We leave title and ingredients empty for now as they are not in the grid
+        query, params = build_filter_query(None, cat_filter_str, None)
+        recipes = db.execute(query, params).fetchall()
 
+    return render_template('search.html', 
+                           categories=categories, 
+                           recipes=recipes, 
+                           selected_categories=selected_categories)
+    
 # Register routes from other modules TO THE BLUEPRINT
 
 kb.add_url_rule('/recipe/new', 

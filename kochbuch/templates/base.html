@@ -84,6 +84,36 @@
         .btn-delete:hover, .btn-save-large:hover {
             background-color: var(--secondary-amber);
         }
+        
+        .btn-move {
+			background: var(--panel-color);
+			border: 1px solid var(--border-color);
+			color: var(--text-color);
+			cursor: pointer;
+			font-size: 0.7rem;
+			padding: 2px 4px;
+			border-radius: 3px;
+			line-height: 1;
+			transition: opacity 0.2s;
+		}
+		
+		.btn-move:hover {
+			background: var(--accent-color);
+			color: white;
+		}
+        /* Deaktiviere den "Hoch"-Button in der allerersten Zeile */
+		#ingredient-rows .ingredient-edit-row:first-child .btn-move[onclick*="'up'"] {
+			opacity: 0.2;
+			pointer-events: none; /* Macht den Button unklickbar */
+			filter: grayscale(1);
+		}
+		
+		/* Deaktiviere den "Runter"-Button in der allerletzten Zeile */
+		#ingredient-rows .ingredient-edit-row:last-child .btn-move[onclick*="'down'"] {
+			opacity: 0.2;
+			pointer-events: none;
+			filter: grayscale(1);
+		}
 
         /* --- Search Section (Index) --- */
         .search-section {
@@ -141,7 +171,62 @@
         .recipe-card-text-block {
             flex-grow: 1;
         }
+        
+        
+           /* Category Selection Styles */
+    .category-grid {
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+        gap: 10px; 
+        margin: 1.5rem 0;
+    }
 
+    .category-tile input[type="checkbox"] {
+        display: none;
+    }
+
+    .category-name {
+        display: block;
+        padding: 8px 12px;
+        border: 1px solid var(--accent-color);
+        border-radius: 5px;
+        color: var(--accent-color);
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+        font-size: 0.9rem;
+    }
+
+    .category-tile:hover .category-name {
+        background: rgba(255, 176, 0, 0.1);
+    }
+
+    .category-tile input[type="checkbox"]:checked + .category-name {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+        box-shadow: 0 0 8px var(--accent-color);
+        border-color: transparent;
+    }
+
+	.recipe-grid-extended {
+        display: grid;
+        /* Forced two-column layout */
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px;
+    }
+
+    .recipe-card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Re-creating the hover effect from index.html */
+    .recipe-card-index:hover {
+        border-color: var(--accent-color);
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+  
         .title-status-container {
             display: flex;
             align-items: center;

@@ -59,42 +59,51 @@
             <div>
                 <h3>{{ t('ingredients_title') }}</h3>
                 <div id="ingredient-rows">
-
-		{% if recipe and recipe.ingredients %}
-                        {% for ing in recipe.ingredients %}
-                        <div class="ingredient-edit-row" style="display: flex; gap: 8px; margin-bottom: 5px; align-items: center;">
-                            <input type="text" name="ingredient_amount" value="{{ ing.quantity if ing.quantity != 0 else '' }}" placeholder="{{ t('amount_head') }}"" style="width: 60px;">
-                            <input type="text" name="ingredient_unit" value="{{ ing.unit_name }}" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="{{ t('unit_head') }}" style="width: 80px;">
-                            <input type="text" name="ingredient_name" value="{{ ing.ingredient_name }}" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="{{ t('ing_or_title') }}" required style="flex-grow: 1;">
-                            <input type="text" name="ingredient_note" value="{{ ing.preparation_note or '' }}" placeholder="{{ t('notes_title') }}" style="width: 150px;">
-                            <label style="font-size: 0.85rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
-                                <input type="hidden" name="ingredient_optional" value="{{ '1' if ing.is_optional else '0' }}">
-    <input type="checkbox" {% if ing.is_optional %}checked{% endif %} 
-           style="cursor: pointer; width: 18px; height: 18px;"
-           onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
-    <span style="font-size: 0.8rem;">Opt.</span>
-                            </label>
-                            <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="ingredient-edit-row" style="display: flex; gap: 8px; margin-bottom: 5px; align-items: center;">
-                            <input type="text" name="ingredient_amount" placeholder="Menge" style="width: 60px;">
-                            <input type="text" name="ingredient_unit" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 80px;">
-                            <input type="text" name="ingredient_name" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
-                            <input type="text" name="ingredient_note" placeholder="Notiz" style="width: 150px;">
-                            <label style="font-size: 0.85rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
-                                <input type="hidden" name="ingredient_optional" value="0">
-                                <input type="checkbox" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
-                                Opt.
-                            </label>
-                            <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="ingredient-action-container">
-                    <button type="button" class="btn" onclick="addIngredientRow()"> + </button>
-                </div>
+					{% if recipe and recipe.ingredients %}
+						{% for ing in recipe.ingredients %}
+						<div class="ingredient-edit-row" style="display: flex; gap: 8px; margin-bottom: 5px; align-items: center;">
+							<div style="display: flex; flex-direction: column; gap: 2px;">
+								<button type="button" class="btn-move" onclick="moveRow(this, 'up')" title="Hoch">▲</button>
+								<button type="button" class="btn-move" onclick="moveRow(this, 'down')" title="Runter">▼</button>
+							</div>
+				
+							<input type="text" name="ingredient_amount" value="{{ ing.quantity if ing.quantity != 0 else '' }}" placeholder="{{ t('amount_head') }}" style="width: 60px;">
+							<input type="text" name="ingredient_unit" value="{{ ing.unit_name }}" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="{{ t('unit_head') }}" style="width: 80px;">
+							<input type="text" name="ingredient_name" value="{{ ing.ingredient_name }}" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="{{ t('ing_or_title') }}" required style="flex-grow: 1;">
+							<input type="text" name="ingredient_note" value="{{ ing.preparation_note or '' }}" placeholder="{{ t('notes_title') }}" style="width: 150px;">
+							
+							<label style="font-size: 0.85rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
+								<input type="hidden" name="ingredient_optional" value="{{ '1' if ing.is_optional else '0' }}">
+								<input type="checkbox" {% if ing.is_optional %}checked{% endif %} 
+									   style="cursor: pointer; width: 18px; height: 18px;"
+									   onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
+								<span style="font-size: 0.8rem;">Opt.</span>
+							</label>
+							<button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+						</div>
+						{% endfor %}
+					{% else %}
+						<div class="ingredient-edit-row" style="display: flex; gap: 8px; margin-bottom: 5px; align-items: center;">
+							<div style="display: flex; flex-direction: column; gap: 2px;">
+								<button type="button" class="btn-move" onclick="moveRow(this, 'up')">▲</button>
+								<button type="button" class="btn-move" onclick="moveRow(this, 'down')">▼</button>
+							</div>
+							<input type="text" name="ingredient_amount" placeholder="Menge" style="width: 60px;">
+							<input type="text" name="ingredient_unit" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 80px;">
+							<input type="text" name="ingredient_name" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
+							<input type="text" name="ingredient_note" placeholder="Notiz" style="width: 150px;">
+							<label style="font-size: 0.85rem; white-space: nowrap; display: flex; align-items: center; gap: 4px;">
+								<input type="hidden" name="ingredient_optional" value="0">
+								<input type="checkbox" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'">
+								Opt.
+							</label>
+							<button type="button" class="btn btn-danger" onclick="this.parentElement.remove()">×</button>
+						</div>
+					{% endif %}
+				</div>
+				<div class="ingredient-action-container" style="margin-top: 10px;">
+    				<button type="button" class="btn" onclick="addIngredientRow()"> + </button>
+				</div>
             </div>
 
             <div>
@@ -151,13 +160,33 @@ function filterDatalist(input, listId) {
         }
     }
 }
+// Function to move a row up or down
+function moveRow(button, direction) {
+    // Find the current ingredient row
+    const row = button.closest('.ingredient-edit-row');
+    if (direction === 'up') {
+        const prev = row.previousElementSibling;
+        // If there's a row above, move this row before it
+        if (prev) row.parentNode.insertBefore(row, prev);
+    } else {
+        const next = row.nextElementSibling;
+        // If there's a row below, move this row after it
+        if (next) row.parentNode.insertBefore(next, row.nextElementSibling.nextElementSibling);
+    }
+}
 
-function addIngredient() {
+// Updated addIngredient function with move buttons
+function addIngredientRow() {
     const container = document.getElementById('ingredient-rows');
     const row = document.createElement('div');
     row.className = 'ingredient-edit-row';
     row.style = "display: flex; gap: 8px; margin-bottom: 5px; align-items: center;";
+    
     row.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+            <button type="button" class="btn-move" onclick="moveRow(this, 'up')">▲</button>
+            <button type="button" class="btn-move" onclick="moveRow(this, 'down')">▼</button>
+        </div>
         <input type="text" name="ingredient_amount" placeholder="Menge" style="width: 60px;">
         <input type="text" name="ingredient_unit" list="unit_list" oninput="filterDatalist(this, 'unit_list')" placeholder="Einheit" style="width: 80px;">
         <input type="text" name="ingredient_name" list="ingredient_list" oninput="filterDatalist(this, 'ingredient_list')" placeholder="Zutat" required style="flex-grow: 1;">
