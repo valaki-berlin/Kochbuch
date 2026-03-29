@@ -7,7 +7,7 @@ SERVICE_NAME="kochbuch"
 WAIT_TIME=5  
 
 # Monitor the directory but exclude the database and macOS noise
-inotifywait -m -r --exclude "db/|static/|uploads|export//" -e modify -e create -e delete -e move --format '%w%f' "$WATCH_DIR" | while read FILE
+inotifywait -m -r --exclude "db/|static/recipe_images/|uploads|export//" -e modify -e create -e delete -e move --format '%w%f' "$WATCH_DIR" | while read FILE
 do
     # Only log if NO timer is currently running (this is the first file)
     if [ ! -f /tmp/restart_timer.pid ]; then

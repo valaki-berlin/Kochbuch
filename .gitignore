@@ -21,7 +21,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-static/
+static/recipe_images/
 build/
 develop-eggs/
 dist/
