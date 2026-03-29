@@ -4,6 +4,8 @@
 TRANSLATIONS = {
     'de': {
         'title': 'Rezepte',
+        'title_admin':'Verwaltung',
+        'title_extended_search': 'Erweiterte Suche',
         'welcome': 'Willkommen in der Hexenküche',
         'search_placeholder': 'Suche nach Rezepten...',
         'btn_new': '[ NEUES REZEPT ERSTELLEN ]',
@@ -19,7 +21,6 @@ TRANSLATIONS = {
 		'search_title': 'Titel:',
 		'search_category': 'Kategorie:',
 		'search_ingredients': 'Zutaten:',
-		'extended_earch_button': 'Erweiterte Suche',
 		'search_button': 'Suchen',
 		'create_recipe': 'Neues Rezept',
 		'import_recipe': 'Rezept importieren',
@@ -52,6 +53,8 @@ TRANSLATIONS = {
 },
     'en': {
         'title': 'Recipes Database',
+        'title_admin':'Maintenance',
+        'title_extended_search': 'Extended Search',
         'welcome': 'Welcome to the Secret Lab',
         'search_placeholder': 'Search for recipes...',
         'btn_new': '[ CREATE NEW RECIPE ]',
@@ -68,7 +71,6 @@ TRANSLATIONS = {
 		'search_category': 'Category:',
 		'search_ingredients': 'Ingredients:',
 		'search_button': 'Search',
-		'extended_earch_button': 'Extended Search',
 		'create_recipe': 'Create New Recipe',
 		'import_recipe': 'Import Recipe',
 		'choose_file':'Choose Upload File',

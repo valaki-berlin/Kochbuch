@@ -3,7 +3,7 @@
 {% block content %}
 <div class="recipe-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 style="margin: 0;">{{ t('extended_earch_button') }}</h1>
+        <h1 style="margin: 0;">{{ t('title_extended_search') }}</h1>
         <a href="{{ url_for('kochbuch.index') }}" class="btn">← {{ t('back_to_db') }}</a>
     </div>
 
@@ -52,10 +52,11 @@
 							
 							<div class="recipe-card-text-block">
 								<div class="title-status-container">
-									<h3>{{ recipe.title }}</h3>
+									<p>{{ recipe.title }}
 									{% if recipe.is_tested %}
 										<span class="status-icon-tested" title="{{ t('tested_label') }}">✓</span>
 									{% endif %}
+									</p>
 								</div>
 								{% if recipe.category %}
 									<small style="color: var(--secondary-amber);">{{ recipe.category }}</small>

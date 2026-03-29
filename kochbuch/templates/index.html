@@ -18,17 +18,6 @@
         </form>
     </div>
 
-<!--
-    <div style="margin: 2rem 0; display: flex; gap: 15px;">
-        <a href="{{ url_for('kochbuch.show_form') }}" class="btn">
-            <b>{{ t('create_recipe') }}</b>
-        </a>
-        <a href="{{ url_for('kochbuch.import_page') }}" class="btn">
-            <b>{{ t('import_recipe') }}</b>
-        </a>
-    </div>
--->
-
 <div style="margin: 2rem 0; display: flex; justify-content: space-between; align-items: center;">
     <div style="display: flex; gap: 15px;">
         <a href="{{ url_for('kochbuch.show_form') }}" class="btn">
@@ -37,11 +26,14 @@
         <a href="{{ url_for('kochbuch.import_page') }}" class="btn">
             <b>{{ t('import_recipe') }}</b>
         </a>
+        <a href="{{ url_for('kochbuch.import_page') }}" class="btn">
+            <b>{{ t('title_admin') }}</b>
+        </a>
     </div>
 
     <div>
         <a href="{{ url_for('kochbuch.extended_search') }}" class="btn" style="border-color: var(--secondary-amber);">
-            {{ t('extended_earch_button') }}
+            {{ t('title_extended_search') }}
         </a>
     </div>
 </div>
@@ -64,19 +56,18 @@
 					alt="Default Image" class="recipe-thumbnail-index">
                                 {% endif %}
                             </div>
-                            
                             <div class="recipe-card-text-block">
                                 <div class="title-status-container">
-                                    <h3>{{ recipe.title }}</h3>
+                                    <p>{{ recipe.title }}
                                     {% if recipe.is_tested %}
                                         <span class="status-icon-tested" title="{{ t('tested_label') }}">✓</span>
                                     {% endif %}
+                                    </p>
                                 </div>
                                 {% if recipe.category %}
                                     <small style="color: var(--secondary-amber);">{{ recipe.category }}</small>
                                 {% endif %}
                             </div>
-                            
                         </div>
                     </a> 
 		    {% endfor %}

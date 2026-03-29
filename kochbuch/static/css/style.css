@@ -1,29 +1,86 @@
-        :root {
-            /* Retro Terminal Palette */
-            --bg-color: #1c1f22;          /* Soft Charcoal */
-            --panel-color: #2d3135;       /* Lighter Grey for cards */
-            --text-color: #ffb000;        /* Off-white */
-            --accent-color: #ffb000;      /* Amber */
-            --secondary-amber: #cc8e00;   /* Muted Amber */
-            --border-color: #3e444a;      /* Subtle borders */
-            --input-bg: #ffb000;          /* Bright white for editing */
-            --input-text: #1a1a1a;        /* Dark text for inputs */
-        }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 2rem;
-            line-height: 1.6;
-        }
+:root {
+	/* Farben */
+	--bg-color: #2b2a24;
+	--panel-color: #32312b;
+	--text-color: #bfb290;
+	--accent-color: #bfb290;
+	--secondary-amber: #8c7d5d;
+	--border-color: #4a4941;
+	--input-bg: #1e1d19;
+	--input-text: #d1ccb9;
+	--font-main: 'Courier New', Courier, monospace; 
+/*	--font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; */
 
-        header {
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-        }
+	/* gestrichelte Linien */
+	--line-dashed: repeating-linear-gradient(
+		to right,
+		var(--accent-color),
+		var(--accent-color) 3px,
+		transparent 3px,
+		transparent 6px
+		);
+}
+
+
+body {
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at center, #45443d 0%, #1a1915 100%);
+    background-attachment: fixed;
+
+    color: var(--text-color);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    margin: 0;
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../images/noise.jpg");
+    background-repeat: repeat;
+    background-size: 500px 500px;
+    opacity: 0.5; 
+    z-index: -1;
+    pointer-events: none;
+}
+
+
+
+header {
+/* -----------------------------------
+Altes border-bottom
+	border-bottom: 1px dashed var(--accent-color);
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+-------------------------------------- */
+
+/* Das Bild der gestrichelten Linie, damit sie mit dem von <hr> übereinstimmt: 
+	background: var(--line-dashed);
+	background-position: bottom;
+	background-size: 100% 1px;
+	background-repeat: no-repeat; /*
+/* ------------------------------------------ */
+
+	/* Damit die Linie Abstand zur Überschrift und danach zu den Eingabefeldern erhält:  */
+	padding-bottom: 10px;
+/*	margin-bottom:25px; */
+}
+
+
+hr {
+	background: var(--line-dashed);
+	border: none;
+	height: 1px;
+}
+
 
         nav ul {
             list-style: none;
@@ -32,10 +89,13 @@
             gap: 1rem;
         }
 
-        h1 { color: var(--accent-color); margin-top: 0; }
+
+h1 { color: var(--accent-color); margin-top: 0; margin-bottom: 0; }
         h3 { color: var(--accent-color); }
         a { color: var(--accent-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
+a:hover { text-decoration: none; }
+
+
 
         /* --- Global Form Elements --- */
         input, textarea, select {
@@ -48,6 +108,13 @@
             box-sizing: border-box;
             width: 100%;
         }
+
+input:focus,textarea:focus, select:focus {
+	outline: none !important;
+	box-shadow: none !important;
+	 border: 1px solid var(--border-color) !important; /* oder eigene Farbe */
+}
+
 
         /* --- Buttons --- */
         button, .btn {
@@ -71,9 +138,26 @@
         .btn-delete, .btn-save-large {
             background-color: var(--accent-color);
             color: var(--bg-color); 
-            font-weight: bold;
+            font-weight: normal;
             border: none;
         }
+
+
+/* einzig dazu da, damit die Lupe zusammen mit dem Text "Suche" in einer Zeile bleibt */
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;          /* Abstand zwischen Icon und Text */
+    white-space: nowrap; /* verhindert Umbruch */
+}
+
+/* Fügt die Lupe im Suchen-Button ein. (und im Löschen-Button...) */
+.btn-delete::before {
+    content: "🔍";
+    margin-right: 6px;
+}
+
+
 
         .btn-delete:hover, .btn-save-large:hover {
             background-color: var(--secondary-amber);
@@ -130,11 +214,7 @@
             gap: 15px;
         }
 
-        /* --- Recipe Cards (Index/List) --- */
-        .recipe-card-link {
-            text-decoration: none;
-            color: inherit;
-        }
+ 
 
         .recipe-card-index {
             background-color: var(--panel-color);
@@ -147,20 +227,18 @@
             transition: all 0.3s ease;
         }
 
-        .recipe-card-index:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px rgba(255, 176, 0, 0.15);
-        }
 
-        .recipe-thumbnail-index {
+
+.recipe-thumbnail-index {
+/* background: var(--line-dashed); */
+
             width: 60px;
             height: 60px;
             object-fit: cover;
             border-radius: 6px;
             flex-shrink: 0;
             border: 1px solid var(--border-color);
-        }
+}
 
         .recipe-card-text-block {
             flex-grow: 1;
@@ -203,47 +281,41 @@
         border-color: transparent;
     }
 
+/* ------------------------------ Index-Seite --------------------------------- */
+
 /* --- Recipe Grid and Cards --- */
+/*  großes Feld für alle angezeigten Rezepte; linke und rechte Spalte zusammen, quasi */
 .recipe-grid-extended {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two columns */
-    gap: 15px;
+    gap: 10px; /* Das sorgt für den Abstand zwischen den einzelnen Rezeptboxen. */
     width: 100%;
 }
 
+
+/* das Feld für die einzelnen Rezepte */
+.recipe-card-link { background-color: transparent;}
+
+
 .recipe-card-index {
 	display: flex;          /* Aktiviert Flexbox */
-    align-items: center;    /* Zentriert alle Kinder vertikal *//
-    gap: 12px;
-    background-color: var(--panel-color);
-    border: 1px solid var(--border-color);
-    padding: 10px;
-    border-radius: 8px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-    text-decoration: none;
-    /* This ensures the card doesn't grow infinitely high */
-    min-height: 90px; 
+	align-items: center;    /* Zentriert alle Kinder vertikal *//
+	gap: 12px;
+	background-color: rgba(0, 0, 0, 0.1); /* alternativ: transparent; */
+	padding: 10px 10px 5px 10px;
+	border: none;
+	box-shadow: 0 0 15px rgba(246, 194, 105, 0.15);
 }
 
+
+/* bei Mouseover: größere Rezeptebox, stärkerer Schatten, dunklerer Hintergrund */
 .recipe-card-index:hover {
-    border-color: var(--accent-color);
-    transform: translateY(-2px);
+	transform: scale(1.03); /* 5% größer in alle Richtungen */
+	box-shadow: 0 0 15px rgba(246, 194, 105, 0.3 );
+	background-color: rgba(0, 0, 0, 0.4); /* dunklerer Hintergrund */
 }
 
-/* --- Image Handling --- */
-.recipe-thumbnail-container {
-    flex-shrink: 0; /* Prevents image from being squeezed */
-    width: 80px;
-    height: 80px;
-}
 
-.recipe-thumbnail-index {
-    width: 80px;
-    height: 80px;
-    object-fit: cover; /* Crops image to square without distortion */
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-}
 
 /* --- Text and Title Handling --- */
 .recipe-card-text-block {
@@ -253,6 +325,7 @@
 	justify-content: center; /* Double insurance for centering text lines */
     overflow: hidden; /* Prevents text from breaking the box */
 }
+
 
 .title-status-container {
 	display: flex;
@@ -286,7 +359,26 @@
     margin-top: 4px;
 }
 
-	
+
+/* ----------------------------------------------------------------------------------------------------- */
+
+
+.recipe-thumbnail-index {
+    width: 80px;
+    height: 80px;
+    object-fit: cover; /* Crops image to square without distortion */
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+/* --- Image Handling --- */
+.recipe-thumbnail-container {
+    flex-shrink: 0; /* Prevents image from being squeezed */
+    width: 80px;
+    height: 80px;
+}
+
+
 	/* --- Ensure hover doesn't change the layout flow --- */
 	.recipe-card-index:hover .title-status-container {
 		/* No changes to layout on hover to prevent jumping */
