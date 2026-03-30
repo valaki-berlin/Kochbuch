@@ -1,4 +1,3 @@
-
 :root {
 	/* Farben */
 	--bg-color: #2b2a24;
@@ -135,7 +134,7 @@ input:focus,textarea:focus, select:focus {
             border-color: #8b949e;
         }
 
-        .btn-delete, .btn-save-large {
+        .btn-search, .btn-save-large {
             background-color: var(--accent-color);
             color: var(--bg-color); 
             font-weight: normal;
@@ -144,7 +143,7 @@ input:focus,textarea:focus, select:focus {
 
 
 /* einzig dazu da, damit die Lupe zusammen mit dem Text "Suche" in einer Zeile bleibt */
-.btn-delete {
+.btn-search {
     display: inline-flex;
     align-items: center;
     gap: 6px;          /* Abstand zwischen Icon und Text */
@@ -152,14 +151,14 @@ input:focus,textarea:focus, select:focus {
 }
 
 /* Fügt die Lupe im Suchen-Button ein. (und im Löschen-Button...) */
-.btn-delete::before {
+.btn-search::before {
     content: "🔍";
     margin-right: 6px;
 }
 
 
 
-        .btn-delete:hover, .btn-save-large:hover {
+        .btn-search:hover, .btn-save-large:hover {
             background-color: var(--secondary-amber);
         }
         
@@ -420,7 +419,7 @@ input:focus,textarea:focus, select:focus {
         }
 
         .calculator-input {
-            width: 70px;
+            width: 60px;
             background: #333 !important;
             color: white !important;
             text-align: center;

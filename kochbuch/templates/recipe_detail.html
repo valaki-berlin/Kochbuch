@@ -16,7 +16,7 @@
             </a>
             <form action="{{ url_for('kochbuch.delete_recipe', id=recipe.recipe_id) }}" method="POST" 
                   onsubmit="return confirm('{{ t('delete_confirm') }}');" style="margin: 0;">
-                <button type="submit" class="btn-delete">{{ t('delete_button') }}</button>
+                <button type="submit" class="btn-search">{{ t('delete_button') }}</button>
             </form>
         </div>
     </div>

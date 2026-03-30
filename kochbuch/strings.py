@@ -14,10 +14,11 @@ TRANSLATIONS = {
 		'cancel':'Abbrechen',
         'save': 'Speichern',
 		'edit_button_text': 'Rezept bearbeiten',
+		'edit_button': 'Bearbeiten',
 		'delete_button': 'Löschen',
+		'edit_button': 'Bearbeiten',
 		'delete_confirm': 'Dieses Rezept wirklich löschen?',
 		'back_to_db': 'Zurück zur Übersicht',
-		'search':'Suchen...',
 		'search_title': 'Titel:',
 		'search_category': 'Kategorie:',
 		'search_ingredients': 'Zutaten:',
@@ -48,9 +49,8 @@ TRANSLATIONS = {
         "unit_head": "Einheit",
         "ing_head": "Zutat",
         "ing_or_title":"Zutat oder Zwischentitel:",
-        "add_ingredient": "Zutat hinzufügen",
-        "delete_row": "Löschen"
-},
+        "add_ingredient": "Zutat hinzufügen"
+        },
     'en': {
         'title': 'Recipes Database',
         'title_admin':'Maintenance',
@@ -63,10 +63,10 @@ TRANSLATIONS = {
         'cancel':'Cancel',
 		'save': 'Save',
 		'edit_button_text': 'Edit Recipe',
+		'edit_button': 'Edit',
 		'delete_button': 'Delete',
 		'delete_confirm': 'Really delete this recipe?',
 		'back_to_db': 'Back to Database',
-		'search':'Search...',
 		'search_title': 'Title:',
 		'search_category': 'Category:',
 		'search_ingredients': 'Ingredients:',
@@ -97,7 +97,6 @@ TRANSLATIONS = {
         "unit_head": "Unit",
         "ing_head": "Ingredient",
         "ing_or_title":"Ingredient or Subtitle:",
-		"add_ingredient": "Add Ingredient",
-        "delete_row": "Delete",
+		"add_ingredient": "Add Ingredient"
     }
 }
