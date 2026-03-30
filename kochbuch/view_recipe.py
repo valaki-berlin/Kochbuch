@@ -35,7 +35,7 @@ def show_details(id):
     if recipe_data is None:
         abort(404)
 
-    # Map ingredients to match the variable names used in recipe_detail.html [cite: 7, 8]
+    # Map ingredients to match the variable names used in show.html [cite: 7, 8]
     formatted_ingredients = []
     for ing in recipe_data.get('ingredients', []):
         name = ing.get('ingredient_name') or ""
@@ -56,7 +56,7 @@ def show_details(id):
     # Map categories into objects with a 'name' attribute for the template badges [cite: 7, 8]
     formatted_categories = [{'name': cat} for cat in recipe_data.get('categories', [])]
 
-    return render_template('recipe_detail.html', 
+    return render_template('show.html', 
                            recipe=recipe_data, 
                            ingredients=formatted_ingredients, 
                            steps=formatted_steps, 

@@ -80,9 +80,9 @@ The main dashboard and search interface of the application.
 * **`Recipe Grid`**: Displays recipe thumbnails, titles, and "tested" status in a responsive card layout.
 * **`Navigation Links`**: Contains prominent buttons for creating new recipes or accessing the import page.
 
-### `recipe_detail.html`
+### `show.html`
 The comprehensive view for a single recipe, including interactive tools.
-* **`calculateMengen()`**: A JavaScript calculator that updates ingredient quantities in real-time based on the desired number of servings.
+* **`calculateAmount()`**: A JavaScript calculator that updates ingredient quantities in real-time based on the desired number of servings.
 * **`Fast Update Form`**: Allows users to edit the "Notes/Annotations" field directly without leaving the detail page.
 * **`Category Tags`**: Renders individual, styled spans for each category linked to the recipe.
 

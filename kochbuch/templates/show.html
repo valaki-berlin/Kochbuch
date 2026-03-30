@@ -2,21 +2,18 @@
 {% block content %}
 
 <div class="recipe-card">
-    <div style="margin-bottom: 1.5rem;">
-        <a href="{{ url_for('kochbuch.index') }}" class="btn">
-            ← {{ t('back_to_db') }}
-        </a>
-    </div>
-
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
         <h1 style="margin: 0;">{{ recipe.title }}</h1>
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+	        <a href="{{ url_for('kochbuch.index') }}" class="btn">
+    	        ← {{ t('back_to_db') }}
+        	</a>
             <a href="{{ url_for('kochbuch.show_edit_form', id=recipe.recipe_id) }}" class="btn">
                 {{ t('edit_button_text') }}
             </a>
             <form action="{{ url_for('kochbuch.delete_recipe', id=recipe.recipe_id) }}" method="POST" 
                   onsubmit="return confirm('{{ t('delete_confirm') }}');" style="margin: 0;">
-                <button type="submit" class="btn-search">{{ t('delete_button') }}</button>
+                <button type="submit" class="btn">{{ t('delete_button') }}</button>
             </form>
         </div>
     </div>
@@ -35,7 +32,7 @@
         <div style="display: flex; align-items: center; gap: 10px;">
             <label><strong>{{ t('servings_label') }}:</strong></label>
             <input type="number" id="servings-calculator" class="calculator-input" 
-                   value="{{ recipe.servings }}" oninput="calculateMengen()">
+                   value="{{ recipe.servings }}" oninput="calculateAmount()">
         </div>
 
         {% if recipe.is_tested %}
@@ -133,7 +130,7 @@
  * Berechnet die Mengen basierend auf der Personenanzahl neu.
  * Geht davon aus, dass die Basis-Mengen in der DB für 1 Person (oder die im Rezept angegebene Menge) sind.
  */
-function calculateMengen() {
+function calculateAmount() {
     const input = document.getElementById('servings-calculator');
     const newServings = parseFloat(input.value);
     const originalServings = parseFloat("{{ recipe.servings if recipe.servings else 1 }}");

@@ -34,6 +34,10 @@ def manage_recipe(id=None):
 
     # 2. GET: Show form
     recipe_data = None
+    if id is None:
+        # Statt recipe_data = None zu lassen:
+        recipe_data = {'ingredients': [{'quantity': '', 'unit_name': '', 'ing_name': '', 'is_optional': 0}]
+    }
     if id is not None:
         # Edit mode: load existing data
         recipe_data = get_complete_recipe(db, id)
@@ -47,6 +51,6 @@ def manage_recipe(id=None):
         'categories': db.execute("SELECT DISTINCT name FROM category ORDER BY name ASC").fetchall()
     }
 
-    return render_template('recipe_form.html', 
+    return render_template('edit.html', 
                            recipe=recipe_data, 
                            master_data=master_data)
