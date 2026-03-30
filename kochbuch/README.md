@@ -21,42 +21,50 @@
 ## Basic structure of main code segments
 
 ### `main.py`
-The central Flask application entry point that manages routing and global configurations.
-* **`inject_globals()`**: Injects the translation helper function `t()` into all HTML templates.
-* **`inject_translations()`**: Provides a dictionary of localized strings to the template context.
-* **`get_string(key)`**: Retrieves a translated string based on the provided key from `strings.py`.
-* **`index()`**: Handles the homepage, including search filtering via FTS5 and recipe listing.
-* **`import_page()`**: Renders the user interface for uploading XML files for batch import.
-* **`do_import()`**: Manages the temporary storage of uploaded XML files and triggers the import logic.
+The core Flask server that handles application configuration, blueprint registration, and top-level routing.
 
-### `create_recipe.py`
-Handles the creation of new recipe entries with robust normalization.
-* **`normalize_german_text(text)`**: Standardizes titles by lowercase conversion, replacing umlauts, and collapsing all spaces/special chars into single dashes.
-* **`show_form()`**: Processes the `POST` request from `recipe_form.html`, splitting the `category` field by **commas or spaces** to create individual database records.
+* **`inject_globals()` / `inject_translations()`**: Makes the translation function `t()` globally available in all HTML templates.
+* **`close_connection(exception)`**: Ensures the SQLite database connection is closed after every request.
+* **`get_string(key)`**: Retrieves the translated string based on the user's browser language settings.
+* **`index()`**: Handles the main landing page and processes basic searches for titles, categories, or ingredients.
+* **`import_page()`**: Renders the upload form for importing recipes via XML files.
+* **`do_import()`**: Manages the XML file upload process, temporary storage, and triggers the import logic.
+* **`extended_search()`**: Provides a specialized search interface specifically for filtering recipes by category grids.
 
-### `edit_recipe.py`
-Manages the modification of existing recipes and media.
-* **`handle_image_upload(recipe_id, db)`**: Validates, resizes using Pillow, and saves uploaded recipe images while maintaining aspect ratio.
-* **`manage_recipe(id=None)`**: Acts as a unified controller to fetch existing data for the form (GET) or update the database (POST).
+### `utils.py`
+A collection of shared utility functions for data processing, image handling, and database orchestration.
+
+* **`handle_image_upload(...)`**: Processes uploaded images, resizes them to a standard width, and updates the database records.
+* **`normalize_title(title)`**: Standardizes recipe titles for URLs and duplicate checks by removing special characters and handling German umlauts.
+* **`prettify_xml(elem)`**: Formats an XML ElementTree into a human-readable, indented string.
+* **`get_categories_string(db, recipe_id)`**: Fetches all categories for a specific recipe and returns them as a single comma-separated string.
+* **`get_complete_recipe(db, recipe_id)`**: Fetches all consolidated data (base info, ingredients, steps, categories) for a recipe into a single dictionary.
+* **`save_recipe_categories(...)`**: Synchronizes the relationship between a recipe and its categories based on user input.
+* ****`save_complete_recipe(...)`**: Acts as the main coordinator to save all parts of a recipe from a form submission.
+* **`update_recipe_base_data(...)`**: Updates core recipe fields like title, servings, and notes in the database.
+* **`save_recipe_ingredients(...)`**: Manages the list of ingredients, including quantities, units, and master data entry.
+* **`save_recipe_steps(...)`**: Parses a text block into individual numbered cooking steps and saves them to the database.
 
 ### `view_recipe.py`
-Handles data retrieval for the detailed display and quick updates.
-* **`delete_recipe(id)`**: Removes a recipe; relies on `ON DELETE CASCADE` in the schema to clean up linked ingredients and steps.
-* **`update_fast(id)`**: Performs an optimized update of the `annotations` (notes) field directly from the recipe detail page.
-* **`show_details(id)`**: Aggregates all recipe data, including formatted ingredient quantities (e.g., `250,0` -> `250`), for the detail view.
+Handles logic for displaying recipe details and performing quick actions like deletions or minor updates.
 
-### `import_recipe.py`
-A migration utility for importing standardized XML cookbook files.
-* **`normalize_title(title)`**: Standardizes titles to ensure the "No-Duplicates" feature works by matching the `title_normalized` column.
-* **`get_or_create_id(cursor, table, column, value)`**: A helper to ensure master data (units, ingredients, categories) exists before linking them.
-* **`parse_amount(amount_str, ingredient_name)`**: Safely converts XML strings to floats, treating empty strings as `0.0`.
-* **`import_xml_to_db(xml_file, db_file)`**: Parses the XML structure to populate recipes, steps, and multiple category links.
+* **`delete_recipe(id)`**: Removes a recipe from the database, relying on SQL cascades to clean up linked ingredients and steps.
+* **`update_fast(id)`**: Allows users to update the recipe's notes directly from the detail view without entering the full edit mode.
+* **`show_details(id)`**: Prepares recipe data for display, including formatting ingredients and identifying sub-headings (headers).
 
-### `export_recipes_xml.py`
-Utility to export the database content back into standardized XML files.
-* **`prettify(elem)`**: Uses `minidom` to return a human-readable, indented XML string.
-* **`export_database_to_xml(db_file, output_dir)`**: Generates XML files where `amount="0"` is exported as `amount=""`, and the `<categories>` block is only generated if data is present.
+### `edit_recipe.py`
+Manages the logic for the unified recipe creation and editing form.
 
+* **`manage_recipe(id=None)`**: Handles GET requests to display the form and POST requests to save new or modified recipe data.
+
+### Data Exchange: `import_recipe.py` & `export_xml.py`
+Modules dedicated to importing from and exporting to structured XML formats.
+
+* **`get_or_create_id(...)`**: Finds a record ID for units/ingredients or creates a new one if it doesn't exist.
+* **`parse_amount(...)`**: Converts string-based quantities into floats for database compatibility.
+* **`import_xml_to_db(...)`**: Parses an XML file and inserts all contained recipe data into the SQLite database.
+* **`prettify(elem)`** (in export): A helper function to ensure exported XML files are properly indented.
+* **`export_database_to_xml(...)`**: Iterates through the entire database and generates individual XML files for every recipe.
 
 ## Frontend and HTML Templates
 

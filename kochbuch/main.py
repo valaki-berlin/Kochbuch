@@ -53,7 +53,11 @@ def get_string(key):
     lang = request.accept_languages.best_match(TRANSLATIONS.keys()) or 'en'
     return TRANSLATIONS.get(lang, TRANSLATIONS['en']).get(key, key)
 
-# --- Routen innerhalb des Blueprints ---
+   
+### 
+### index page
+###
+
 
 @kb.route('/')
 def index():
@@ -80,6 +84,11 @@ def index():
     return render_template('index.html', 
                            recipes=recipes, 
                            t=get_string)
+
+   
+### 
+### import page
+###
 
 def import_page():
     """Renders the upload form for XML import."""
@@ -121,7 +130,10 @@ def do_import():
     flash('Invalid file format. Please upload an XML file.', 'danger')
     return redirect(url_for('kochbuch.import_page'))
     
-    
+### 
+### search page
+###
+
 @kb.route('/search')
 def extended_search():
     db = get_db()
@@ -147,7 +159,16 @@ def extended_search():
                            categories=categories, 
                            recipes=recipes, 
                            selected_categories=selected_categories)
+
+   
+### 
+### admin page
+###
+def admin_page():
+    """Renders the administration overview page."""
+    return render_template('admin.html')
     
+
 # Register routes from other modules TO THE BLUEPRINT
 
 kb.add_url_rule('/recipe/new', 
@@ -184,7 +205,10 @@ kb.add_url_rule('/recipe/fast_update/<int:id>',
                 view_func=view_recipe.update_fast, 
                 methods=['POST'], 
                 endpoint='update_fast')
-
+                
+kb.add_url_rule('/admin', 
+                view_func=admin_page, 
+                endpoint='admin_page')
 # --- App Konfiguration ---
 
 app.register_blueprint(kb)

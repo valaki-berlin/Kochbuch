@@ -7,18 +7,18 @@ This repository contains the software suite for the "Kochbuch" (recipe book) pri
 ### 1. Dashboard (`/dashboard`)
 The central entry portal for the system.
 - **Tech Stack:** Python Flask / Gunicorn.
-- **Design:** Minimalist "Amber Terminal" aesthetic.
 - **Features:** Automatic localization (DE/EN) based on browser headers, quick-access navigation for sub-modules.
 
 ### 2. Cookbook (`/kochbuch`)
 The recipe management module for the Spieltisch.
 - **Tech Stack:** Python Flask, SQLite database.
+- **Design:** Minimalist "Amber Terminal" aesthetic.
 - **Features:** Management of recipes, ingredients, and categories.
 
 ### 3. Services (`/services`)
 Contains configuration files for system integration.
 - **Target Directory:** `/etc/systemd/system/`
-- **Files:** `dashboard.service`, `kochbuch.service`.
+- **Files:** `dashboard.service`, `kochbuch.service`, `watcher.service`
 - These services ensure that the web applications load automatically on boot and restart in case of failure.
 
 ## Installation & Setup

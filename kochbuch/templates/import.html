@@ -2,9 +2,15 @@
 
 {% block content %}
 <div class="recipe-card">
-    <h1>{{ t('import_recipe') }}</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="margin: 0;">{{ t('import_recipe') }}</h1>
+        <a href="{{ url_for('kochbuch.index') }}" class="btn">
+            ← {{ t('back_to_db') }}
+        </a>
+    </div>
+
     <p style="color: var(--secondary-amber); margin-bottom: 2rem;">
-		{{ t('upload_text') }}
+        {{ t('upload_text') }}
     </p>
 
     <form action="{{ url_for('kochbuch.do_import') }}" method="POST" enctype="multipart/form-data" class="search-grid" style="display: block;">
@@ -17,10 +23,7 @@
             <button type="submit" class="btn-delete">
                 {{ t('import_button') }}
             </button>
-            <a href="{{ url_for('kochbuch.index') }}" class="btn">
-                {{ t('back_to_db') }}
-            </a>
-        </div>
+            </div>
     </form>
 </div>
 {% endblock %}

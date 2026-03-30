@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="recipe-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 style="margin: 0;">{{ t('title_admin') }}</h1>
-        <a href="{{ url_for('kochbuch.index') }}" class="btn">← {{ t('back_to_db') }}</a>
-    </div>
+        <h1 style="margin: 0;">{{ t('title_admin') }}</h1> 
+        <a href="{{ url_for('kochbuch.index') }}" 
+	        class="btn">← {{ t('back_to_db') }}</a> 
+	</div>
+</div>
 
 {% endblock %}
