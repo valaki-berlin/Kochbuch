@@ -86,7 +86,7 @@ The comprehensive view for a single recipe, including interactive tools.
 * **`Fast Update Form`**: Allows users to edit the "Notes/Annotations" field directly without leaving the detail page.
 * **`Category Tags`**: Renders individual, styled spans for each category linked to the recipe.
 
-### `recipe_form.html`
+### `edit.html`
 The unified interface for both creating new recipes and editing existing ones.
 * **`filterDatalist()`**: A JavaScript helper that provides "search-as-you-type" suggestions for units, ingredients, and categories.
 * **`Dynamic Rows`**: Uses the logic from `base.html` to allow an unlimited number of ingredients and preparation steps.
