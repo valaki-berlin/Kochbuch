@@ -49,7 +49,17 @@ TRANSLATIONS = {
         "unit_head": "Einheit",
         "ing_head": "Zutat",
         "ing_or_title":"Zutat oder Zwischentitel:",
-        "add_ingredient": "Zutat hinzufügen"
+        "add_ingredient": "Zutat hinzufügen",
+        'admin_edit_message': 'Kategorien wurden erfolgreich aktualisiert.',
+		'admin_del_message': 'Die ausgewählten Kategorien wurden gelöscht.',
+        'admin_export_message': 'XML-Export wurde erfolgreich erstellt.',
+        'admin_purge_message': 'Datenbank wurde von ungenutzten Einträgen bereinigt.',
+        'admin_no_selection': 'Bitte mindestens ein Element auswählen',
+        "admin_edit_button":"Kategorien bearbeiten",
+        "admin_del_button":"Kategorien löschen",
+        "admin_export_button":"Exportieren",
+        "admin_purge_button":"Bereinigen",
+        "admin_exec_button":"Ausführen"
         },
     'en': {
         'title': 'Recipes Database',
@@ -97,6 +107,16 @@ TRANSLATIONS = {
         "unit_head": "Unit",
         "ing_head": "Ingredient",
         "ing_or_title":"Ingredient or Subtitle:",
-		"add_ingredient": "Add Ingredient"
+		"add_ingredient": "Add Ingredient", 
+		'admin_edit_message': 'Categories updated successfully.',
+        'admin_del_message': 'Selected categories have been deleted.',
+        'admin_export_message': 'XML export created successfully.',
+        'admin_purge_message': 'Database purged of unused entries.',
+        'admin_no_selection': 'Please select at least one item.',
+        "admin_edit_button":"Edit Categories",
+        "admin_del_button":"Delete Categories",
+        "admin_export_button":"Export",
+        "admin_purge_button":"Purge",
+        "admin_exec_button":"Execute"
     }
 }

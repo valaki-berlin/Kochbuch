@@ -13,6 +13,7 @@ from database import get_db
 import view_recipe
 import edit_recipe
 import import_recipe
+import admin
 
 DATABASE = 'db/RezeptDB.db'
 
@@ -207,7 +208,8 @@ kb.add_url_rule('/recipe/fast_update/<int:id>',
                 endpoint='update_fast')
                 
 kb.add_url_rule('/admin', 
-                view_func=admin_page, 
+                view_func=admin.admin_page,
+                methods=['GET', 'POST'],
                 endpoint='admin_page')
 # --- App Konfiguration ---
 

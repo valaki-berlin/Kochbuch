@@ -1,13 +1,101 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    /* Hide the checkbox but use its state for styling */
+    .category-tile input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Trigger the 'Golden Glow' and inversion.
+       We use the sibling selector (+) so it matches your style.css logic.
+    */
+    .category-tile input[type="checkbox"]:checked + .category-name {
+        background-color: var(--accent-color) !important;
+        color: var(--bg-color) !important;
+        box-shadow: 0 0 10px var(--accent-color);
+        border-color: transparent;
+    }
+
+    /* Style the text input to be invisible and inherit colors 
+       from the parent (.category-name) when it toggles.
+    */
+    .category-edit-input {
+        background: transparent;
+        border: none;
+        color: inherit; 
+        font-family: inherit;
+        font-size: inherit;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        padding: 8px 12px; /* Standard tile padding */
+        display: block;
+    }
+
+    /* Remove default focus borders to keep the tile clean */
+    .category-edit-input:focus {
+        outline: none;
+    }
+</style>
 
 <div class="recipe-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <h1 style="margin: 0;">{{ t('title_admin') }}</h1> 
-        <a href="{{ url_for('kochbuch.index') }}" 
-	        class="btn">← {{ t('back_to_db') }}</a> 
-	</div>
-</div>
+        <a href="{{ url_for('kochbuch.index') }}" class="btn">← {{ t('back_to_db') }}</a> 
+    </div>
 
+    <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 2rem; flex-wrap: wrap;">
+        <a href="{{ url_for('kochbuch.admin_page', mode='edit') }}" class="btn {% if mode == 'edit' %}btn-inverted{% endif %}">
+            <b>{{ t('admin_edit_button') }}</b>
+        </a>
+        <a href="{{ url_for('kochbuch.admin_page', mode='delete') }}" class="btn {% if mode == 'delete' %}btn-inverted{% endif %}">
+            <b>{{ t('admin_del_button') }}</b>
+        </a>
+        <a href="{{ url_for('kochbuch.admin_page', mode='export') }}" class="btn {% if mode == 'export' %}btn-inverted{% endif %}">
+            <b>{{ t('admin_export_button') }}</b>
+        </a>
+        <a href="{{ url_for('kochbuch.admin_page', mode='purge') }}" class="btn {% if mode == 'purge' %}btn-inverted{% endif %}">
+            <b>{{ t('admin_purge_button') }}</b>
+        </a>
+    </div>
+
+    {% if mode %}
+        <form method="POST">
+            <input type="hidden" name="action_mode" value="{{ mode }}">
+
+            {% if mode in ['edit', 'delete'] %}
+                <div class="category-grid">
+                    {% for cat in categories %}
+                        <label class="category-tile" style="cursor: pointer; padding: 0; overflow: hidden;">
+                            <input type="checkbox" name="selected_items" value="{{ cat.category_id }}">
+                            
+                            <span class="category-name" style="padding: 0; display: block; width: 100%; border: none;">
+                                <input type="hidden" name="all_ids" value="{{ cat.category_id }}">
+                            
+                                <input type="text" 
+                                       name="category_names" 
+                                       value="{{ cat.name }}" 
+                                       class="category-edit-input"
+                                       {% if mode != 'edit' %} readonly style="pointer-events: none;" {% endif %}>
+                            </span>
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if mode == 'export' or mode == 'purge' %}
+                <div style="text-align: center; padding: 3rem; border: 1px dashed var(--secondary-amber);">
+                    <p>{{ t('admin_export_button' if mode == 'export' else 'admin_purge_button') }}</p>
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn btn-inverted" style="min-width: 150px;">
+                    <b>{{ t('admin_exec_button') }}</b>
+                </button>
+            </div>
+        </form>
+    {% endif %}
+</div>
 {% endblock %}

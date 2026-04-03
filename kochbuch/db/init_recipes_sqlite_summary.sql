@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS recipe (
     original_source TEXT,
     servings      INTEGER CHECK (servings > 0),
     is_tested     INTEGER NOT NULL DEFAULT 1 CHECK (is_tested IN (0,1)),
+    is_tagged     INTEGER NOT NULL DEFAULT 0 CHECK (is_tested IN (0,1)),
     created_at         TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
 );
